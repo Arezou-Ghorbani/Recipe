@@ -13,4 +13,19 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="DarkGreenTextInputLayout" parent ="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/_15mdp</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/_15mdp</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/_15mdp</item>
+        <item name="boxCornerRadiusTopStart">@dimen/_15mdp</item>
+        <item name="startIconTint">@color/darkGreen</item>
+        <item name="hintTextColor">@color/moonstoneBlue</item>
+        <item name="boxStrokeWidth">@dimen/_1mdp</item>
+        <item name="boxStrokeErrorColor">@color/tart_orange</item>
+        <item name="boxStrokeColor">@color/darkGreen</item>
+        <item name="android:layout_marginTop">@dimen/_10mdp</item>
+    </style>
+
 </resources>

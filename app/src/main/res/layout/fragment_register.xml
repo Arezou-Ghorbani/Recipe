@@ -27,32 +27,56 @@
                 android:adjustViewBounds="true"
                 android:padding="@dimen/_20mdp"
                 android:src="@drawable/register_logo" />
-
+            <!--            name-->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/nameTxtLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:boxCornerRadiusBottomEnd="@dimen/_15mdp"
-                app:boxCornerRadiusBottomStart="@dimen/_15mdp"
-                app:boxCornerRadiusTopEnd="@dimen/_15mdp"
-                app:boxCornerRadiusTopStart="@dimen/_15mdp"
+                style="@style/DarkGreenTextInputLayout"
+                android:hint="@string/first_name"
                 app:startIconDrawable="@drawable/ic_round_person_24"
-                app:startIconTint="@color/darkGreen"
-                android:hint="@string/username"
-                app:hintTextColor="@color/moonstoneBlue"
-                android:textColor="@color/darkGreen"
-                app:boxStrokeWidth="@dimen/_1mdp"
-                app:boxStrokeErrorColor="@color/tart_orange"
-                app:boxStrokeColor="@color/darkGreen">
+                >
                 <com.google.android.material.textfield.TextInputEditText
-                   android:id="@+id/nameEdt"
+                    android:id="@+id/nameEdt"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <!--            lastName-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/lastNameLayout"
+                style="@style/DarkGreenTextInputLayout"
+                android:hint="@string/last_name"
+                app:startIconDrawable="@drawable/ic_round_person_24">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/lastNameEdt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!--            username-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/userNameTxtLayout"
+                style="@style/DarkGreenTextInputLayout"
+                android:hint="@string/username"
+                app:startIconDrawable="@drawable/ic_round_person_24">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/userNameEdt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!--            email-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/emailLayout"
+                style="@style/DarkGreenTextInputLayout"
+                android:hint="@string/email"
+                app:hintTextColor="@color/moonstoneBlue"
+                app:startIconDrawable="@drawable/ic_round_email_24">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailEdt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
-
     </ScrollView>
 
     <com.google.android.material.button.MaterialButton
