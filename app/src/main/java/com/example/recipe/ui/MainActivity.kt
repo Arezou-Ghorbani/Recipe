@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         naveHost = supportFragmentManager.findFragmentById(R.id.navHost) as NavHostFragment
     }
 
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
