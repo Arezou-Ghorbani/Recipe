@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.RegisterFragment">
+    tools:context=".ui.register.RegisterFragment">
     <!--scrollView-->
     <ScrollView
         android:layout_width="0dp"
@@ -81,13 +81,11 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/submitBtn"
+        style="@style/darkGreenMaterialButton"
         android:layout_width="0dp"
         android:layout_height="@dimen/_45mdp"
         android:layout_margin="@dimen/_15mdp"
-        android:backgroundTint="@color/darkGreen"
         android:text="@string/register"
-        android:textSize="@dimen/_14font_mdp"
-        app:cornerRadius="@dimen/_15mdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
