@@ -1,10 +1,12 @@
 package com.example.recipe.ui
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
 import com.example.recipe.R
 import com.example.recipe.databinding.ActivityMainBinding
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 
 class MainActivity : AppCompatActivity() {
     //    binding
@@ -30,5 +32,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNavigateUp(): Boolean {
         return naveHost.navController.navigateUp() || super.onNavigateUp()
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase))
     }
 }
