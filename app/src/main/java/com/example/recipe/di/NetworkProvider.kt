@@ -2,7 +2,7 @@ package com.example.recipe.di
 
 import com.example.recipe.utils.Constant.BASE_URL
 import com.example.recipe.utils.Constant.CONNECTION_TIME
-import com.example.recipe.utils.network.ApiServices
+import com.example.recipe.data.network.ApiServices
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
