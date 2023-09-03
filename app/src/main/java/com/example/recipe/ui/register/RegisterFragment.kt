@@ -5,14 +5,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.viewModels
 import coil.load
 import com.example.recipe.R
 import com.example.recipe.databinding.FragmentRegisterBinding
+import com.example.recipe.viewmodel.RegisterViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RegisterFragment : Fragment() {
     //    binding
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
+
+    //    View Model
+    private val viewModel: RegisterViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -25,6 +33,13 @@ class RegisterFragment : Fragment() {
 //        initViews
         binding?.apply {
             coverImage.load(R.drawable.register_logo)
+//            email
+            emailEdt.addTextChangedListener {
+                if (it.toString().contains("@"))
+                    emailLayout.error = getString(R.string.emailNotValid)
+                else emailLayout.error = ""
+            }
+
         }
     }
 

@@ -6,8 +6,9 @@ import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
 import com.example.recipe.R
 import com.example.recipe.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     //    binding
     private var _binding: ActivityMainBinding? = null
