@@ -1,6 +1,7 @@
 package com.example.recipe.ui.register
 
 import android.os.Bundle
+import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +11,11 @@ import androidx.fragment.app.viewModels
 import coil.load
 import com.example.recipe.R
 import com.example.recipe.databinding.FragmentRegisterBinding
+import com.example.recipe.models.register.BodyRegister
+import com.example.recipe.utils.Constant
 import com.example.recipe.viewmodel.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RegisterFragment : Fragment() {
@@ -21,6 +25,11 @@ class RegisterFragment : Fragment() {
 
     //    View Model
     private val viewModel: RegisterViewModel by viewModels()
+
+    //    Injects
+    @Inject
+    lateinit var body: BodyRegister
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -35,12 +44,28 @@ class RegisterFragment : Fragment() {
             coverImage.load(R.drawable.register_logo)
 //            email
             emailEdt.addTextChangedListener {
-                if (it.toString().contains("@"))
-                    emailLayout.error = getString(R.string.emailNotValid)
-                else emailLayout.error = ""
+                if (!it.toString().isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(it.toString())
+                        .matches()
+                ) emailLayout.error = ""
+                else emailLayout.error = getString(R.string.emailNotValid)
+            }
+
+            submitBtn.setOnClickListener {
+                var email = emailEdt.text.toString()
+                var firstName = nameEdt.text.toString()
+                var lastName = lastNameEdt.text.toString()
+                var userName = userNameEdt.text.toString()
+                body.email = email
+                body.firstName = firstName
+                body.lastName = lastName
+                body.username = userName
+                viewModel.callRegisterApi(Constant.MY_API_KEY, body)
+
             }
 
         }
+
+
     }
 
     override fun onDestroy() {
