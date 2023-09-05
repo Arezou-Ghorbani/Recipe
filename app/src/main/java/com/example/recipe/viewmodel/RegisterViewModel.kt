@@ -17,7 +17,7 @@ import javax.inject.Inject
 class RegisterViewModel @Inject constructor(private val repository: RegisterRepository) :
     ViewModel() {
     //    Api
-    val registerData = MutableLiveData<NetworkRequest<ResponseRegister>>()
+    private val registerData = MutableLiveData<NetworkRequest<ResponseRegister>>()
     fun callRegisterApi(apiKey: String, body: BodyRegister) = viewModelScope.launch {
         registerData.value = NetworkRequest.Loading()
         val response = repository.postRegister(apiKey, body)

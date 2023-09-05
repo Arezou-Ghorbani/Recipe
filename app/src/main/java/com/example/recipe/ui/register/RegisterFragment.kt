@@ -8,13 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import coil.load
 import com.example.recipe.R
 import com.example.recipe.databinding.FragmentRegisterBinding
 import com.example.recipe.models.register.BodyRegister
 import com.example.recipe.utils.Constant
+import com.example.recipe.utils.NetworkChecker
 import com.example.recipe.viewmodel.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -30,6 +33,8 @@ class RegisterFragment : Fragment() {
     @Inject
     lateinit var body: BodyRegister
 
+    @Inject
+    lateinit var networkChecker: NetworkChecker
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -59,6 +64,12 @@ class RegisterFragment : Fragment() {
                 body.firstName = firstName
                 body.lastName = lastName
                 body.username = userName
+//                Check network
+                lifecycleScope.launchWhenStarted {
+                    networkChecker.checkNetworkAvailability().collect{state->
+
+                    }
+                }
                 viewModel.callRegisterApi(Constant.MY_API_KEY, body)
 
             }
