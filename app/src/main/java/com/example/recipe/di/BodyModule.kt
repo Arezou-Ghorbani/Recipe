@@ -13,6 +13,5 @@ import javax.inject.Singleton
 @InstallIn(FragmentComponent::class)
 object BodyModule {
     @Provides
-    @Singleton
     fun bodyRegister()=BodyRegister()
 }
