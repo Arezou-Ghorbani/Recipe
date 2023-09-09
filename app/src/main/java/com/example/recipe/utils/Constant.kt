@@ -6,4 +6,7 @@ object Constant {
     const val CONNECTION_TIME = 60L
     const val MY_API_KEY="041c3da96de843e9a1a553c37104db3f"
     const val API_KEY="apiKey"
+  const  val REGISTER_USERNAME="register_username"
+  const  val REGISTER_HASH="register_hash"
+  const  val REGISTER_USERINFO="register_userinfo"
 }

@@ -96,7 +96,9 @@ class RegisterFragment : Fragment() {
             when (response) {
                 is NetworkRequest.Loading -> {}
                 is NetworkRequest.Success -> {
-
+                    response.data?.let { data ->
+                        viewModel.saveData(data.username.toString(), data.hash.toString())
+                    }
                 }
 
                 is NetworkRequest.Error -> {
