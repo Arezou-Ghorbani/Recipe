@@ -49,20 +49,20 @@ class RegisterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 //        initViews
         binding?.apply {
-            coverImage.load(R.drawable.register_logo)
+            coverImg.load(R.drawable.register_logo)
 //            email
             emailEdt.addTextChangedListener {
                 if (!it.toString().isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(it.toString())
                         .matches()
-                ) emailLayout.error = ""
-                else emailLayout.error = getString(R.string.emailNotValid)
+                ) emailTxtLay.error = ""
+                else emailTxtLay.error = getString(R.string.emailNotValid)
             }
 
             submitBtn.setOnClickListener {
                 var email = emailEdt.text.toString()
                 var firstName = nameEdt.text.toString()
                 var lastName = lastNameEdt.text.toString()
-                var userName = userNameEdt.text.toString()
+                var userName = usernameEdt.text.toString()
                 body.email = email
                 body.firstName = firstName
                 body.lastName = lastName

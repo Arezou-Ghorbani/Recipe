@@ -5,89 +5,102 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.register.RegisterFragment">
-    <!--scrollView-->
+    <!--Scroll-->
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintBottom_toTopOf="@+id/submitBtn"
-        app:layout_constraintEnd_toEndOf="@+id/submitBtn"
-        app:layout_constraintStart_toStartOf="@+id/submitBtn"
-        app:layout_constraintTop_toTopOf="parent"
-        android:orientation="vertical"  >
-        <!--    Container-->
+        app:layout_constraintBottom_toTopOf="@id/submitBtn"
+        app:layout_constraintEnd_toEndOf="@id/submitBtn"
+        app:layout_constraintStart_toStartOf="@id/submitBtn"
+        app:layout_constraintTop_toTopOf="parent">
+        <!--Container-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/_20mdp"
             android:orientation="vertical">
-
+            <!--Cover-->
             <ImageView
-                android:id="@+id/coverImage"
+                android:id="@+id/coverImg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:padding="@dimen/_20mdp"
-               />
-            <!--            name-->
+                android:padding="@dimen/_20mdp" />
+            <!--Name-->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/nameTxtLayout"
+                android:id="@+id/nameTxtLay"
                 style="@style/DarkGreenTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/first_name"
-                app:startIconDrawable="@drawable/ic_round_person_24"
-                >
+                app:startIconDrawable="@drawable/ic_round_person_24">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/nameEdt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
             </com.google.android.material.textfield.TextInputLayout>
-            <!--            lastName-->
+            <!--Last name-->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/lastNameLayout"
+                android:id="@+id/lastNameTxtLay"
                 style="@style/DarkGreenTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/last_name"
                 app:startIconDrawable="@drawable/ic_round_person_24">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/lastNameEdt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-            </com.google.android.material.textfield.TextInputLayout>
 
-            <!--            username-->
+            </com.google.android.material.textfield.TextInputLayout>
+            <!--Username-->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/userNameTxtLayout"
+                android:id="@+id/usernameTxtLay"
                 style="@style/DarkGreenTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/username"
                 app:startIconDrawable="@drawable/ic_round_person_24">
+
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/userNameEdt"
+                    android:id="@+id/usernameEdt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-            </com.google.android.material.textfield.TextInputLayout>
 
-            <!--            email-->
+            </com.google.android.material.textfield.TextInputLayout>
+            <!--Email-->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/emailLayout"
+                android:id="@+id/emailTxtLay"
                 style="@style/DarkGreenTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/email"
-                app:hintTextColor="@color/moonstoneBlue"
                 app:startIconDrawable="@drawable/ic_round_email_24">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/emailEdt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
-    </ScrollView>
 
+    </ScrollView>
+    <!--Register-->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/submitBtn"
-        style="@style/darkGreenMaterialButton"
         android:layout_width="0dp"
         android:layout_height="@dimen/_45mdp"
         android:layout_margin="@dimen/_15mdp"
+        style="@style/DarkGreenMaterialButton"
         android:text="@string/register"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
