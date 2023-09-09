@@ -15,9 +15,12 @@ import com.example.recipe.databinding.FragmentRegisterBinding
 import com.example.recipe.models.register.BodyRegister
 import com.example.recipe.utils.Constant
 import com.example.recipe.utils.NetworkChecker
+import com.example.recipe.utils.NetworkRequest
 import com.example.recipe.viewmodel.RegisterViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import showSnackBar
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -66,13 +69,17 @@ class RegisterFragment : Fragment() {
                 body.username = userName
 //                Check network
                 lifecycleScope.launchWhenStarted {
-                    networkChecker.checkNetworkAvailability().collect{state->
-
+                    networkChecker.checkNetworkAvailability().collect { state ->
+                        if (state)
+                            viewModel.callRegisterApi(Constant.MY_API_KEY, body)
+                        else {
+                            root.showSnackBar(getString(R.string.checkConnection))
+                        }
                     }
                 }
-                viewModel.callRegisterApi(Constant.MY_API_KEY, body)
 
             }
+            loadRegisterData()
 
         }
 
@@ -82,5 +89,20 @@ class RegisterFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    private fun loadRegisterData() {
+        viewModel.registerData.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is NetworkRequest.Loading -> {}
+                is NetworkRequest.Success -> {
+
+                }
+
+                is NetworkRequest.Error -> {
+                    binding.root.showSnackBar(response.message!!)
+                }
+            }
+        }
     }
 }
