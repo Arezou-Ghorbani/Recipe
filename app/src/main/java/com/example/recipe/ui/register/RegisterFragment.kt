@@ -100,7 +100,6 @@ class RegisterFragment : Fragment() {
                         viewModel.saveData(data.username.toString(), data.hash.toString())
                     }
                 }
-
                 is NetworkRequest.Error -> {
                     binding.root.showSnackBar(response.message!!)
                 }
