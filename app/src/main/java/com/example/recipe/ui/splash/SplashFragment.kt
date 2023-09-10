@@ -45,13 +45,13 @@ class SplashFragment : Fragment() {
 lifecycleScope.launchWhenCreated {
     delay(2500)
 //    check userInfo
-    viewModel.readData.asLiveData().observe(viewLifecycleOwner){
-        if (it.userName.isNotEmpty()){
-//            go to main page
-        }else{
-//            go to register page
-        }
-    }
+//    viewModel.readData.asLiveData().observe(viewLifecycleOwner){
+//        if (it.userName.isNotEmpty()){
+////            go to main page
+//        }else{
+////            go to register page
+//        }
+//    }
 }
         }
     }
