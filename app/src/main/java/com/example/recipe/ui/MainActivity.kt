@@ -9,6 +9,7 @@ import com.example.recipe.databinding.ActivityMainBinding
 import com.example.recipe.utils.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
+
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
     //    binding
@@ -26,6 +27,8 @@ class MainActivity : BaseActivity() {
         naveHost = supportFragmentManager.findFragmentById(R.id.navHost) as NavHostFragment
 //        set bottom nav Fragment replacement
         binding.mainBottomNave.setupWithNavController(naveHost.navController)
+//        bottomNave background removed
+        binding.mainBottomNave.background = null
     }
 
 

@@ -43,8 +43,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/jacarta"
         android:src="@drawable/ic_restaurant"
-        android:tint="@color/white"
-
+        app:tint="@color/white"
         app:layout_anchor="@id/bottomAppBar"/>
 <!--
         app:layout_anchor="@id/bottomAppBar "
