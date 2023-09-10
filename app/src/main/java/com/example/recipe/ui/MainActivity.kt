@@ -3,6 +3,7 @@ package com.example.recipe.ui
 import android.content.Context
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.example.recipe.R
 import com.example.recipe.databinding.ActivityMainBinding
 import com.example.recipe.utils.BaseActivity
@@ -23,6 +24,8 @@ class MainActivity : BaseActivity() {
         setContentView(binding.root)
 //        setUp NaveHost
         naveHost = supportFragmentManager.findFragmentById(R.id.navHost) as NavHostFragment
+//        set bottom nav Fragment replacement
+        binding.mainBottomNave.setupWithNavController(naveHost.navController)
     }
 
 
