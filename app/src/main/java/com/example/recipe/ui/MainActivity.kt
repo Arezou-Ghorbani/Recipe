@@ -2,6 +2,7 @@ package com.example.recipe.ui
 
 import android.content.Context
 import android.os.Bundle
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.recipe.R
@@ -29,6 +30,14 @@ class MainActivity : BaseActivity() {
         binding.mainBottomNave.setupWithNavController(naveHost.navController)
 //        bottomNave background removed
         binding.mainBottomNave.background = null
+//        gone bottom nav in splash and register fragment
+        naveHost.navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.splashFragment -> bottomNavVisibility(false)
+                R.id.registerFragment -> bottomNavVisibility(false)
+                else -> bottomNavVisibility(true)
+            }
+        }
     }
 
 
@@ -39,6 +48,18 @@ class MainActivity : BaseActivity() {
 
     override fun onNavigateUp(): Boolean {
         return naveHost.navController.navigateUp() || super.onNavigateUp()
+    }
+
+    private fun bottomNavVisibility(isVisible: Boolean) {
+        binding.apply {
+            if (isVisible) {
+                bottomAppBar.isVisible = true
+                mainFab.isVisible = true
+            } else {
+                bottomAppBar.isVisible = false
+                mainFab.isVisible = false
+            }
+        }
     }
 
 }
