@@ -30,10 +30,9 @@
         android:id="@+id/versionTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_200mdp"
+        android:layout_marginBottom="@dimen/_20mdp"
         android:textSize="@dimen/_10font_mdp"
         android:textColor="@color/jacarta"
-        app:layout_constraintTop_toBottomOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

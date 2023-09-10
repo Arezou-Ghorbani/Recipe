@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import coil.load
 import com.example.recipe.R
 import com.example.recipe.databinding.FragmentRegisterBinding
@@ -17,7 +17,7 @@ import com.example.recipe.utils.Constant
 import com.example.recipe.utils.NetworkChecker
 import com.example.recipe.utils.NetworkRequest
 import com.example.recipe.viewmodel.RegisterViewModel
-import com.google.android.material.snackbar.Snackbar
+import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import showSnackBar
@@ -98,8 +98,12 @@ class RegisterFragment : Fragment() {
                 is NetworkRequest.Success -> {
                     response.data?.let { data ->
                         viewModel.saveData(data.username.toString(), data.hash.toString())
+                        findNavController().popBackStack(R.id.registerFragment, true)
+                        findNavController().navigate(R.id.actionToRecipe)
+
                     }
                 }
+
                 is NetworkRequest.Error -> {
                     binding.root.showSnackBar(response.message!!)
                 }

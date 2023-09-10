@@ -14,9 +14,9 @@ import javax.inject.Inject
 
 /**Created by Arezou-Ghorbani on 03,September,2023,ArezouGhorbaniii@gmail.com**/
 @HiltViewModel
-class RegisterViewModel @Inject constructor(private val repository: RegisterRepository) :
-    ViewModel() {
-    //    Api
+class RegisterViewModel @Inject constructor(private val repository: RegisterRepository) : ViewModel() {
+
+    //Api
     val registerData = MutableLiveData<NetworkRequest<ResponseRegister>>()
     fun callRegisterApi(apiKey: String, body: BodyRegister) = viewModelScope.launch {
         registerData.value = NetworkRequest.Loading()
@@ -24,10 +24,11 @@ class RegisterViewModel @Inject constructor(private val repository: RegisterRepo
         registerData.value = NetworkResponse(response).generalNetworkResponse()
     }
 
-    //    Store data
-    fun saveData(userName: String, hash: String) = viewModelScope.launch {
-        repository.saveRegisterData(userName, hash)
+    //Stored data
+    fun saveData(username: String, hash: String) = viewModelScope.launch {
+        repository.saveRegisterData(username, hash)
     }
 
     val readData = repository.readRegisterData
+
 }

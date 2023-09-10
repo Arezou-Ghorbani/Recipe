@@ -43,14 +43,15 @@ class RegisterRepository @Inject constructor(
     }
 
     val readRegisterData: Flow<RegisterStoredModel> = context.dataStore.data
-        .catch {e->
-            if (e is IOException){
+        .catch { e ->
+            if (e is IOException) {
                 emit(emptyPreferences())
-            }else throw e
-
+            } else {
+                throw e
+            }
         }.map {
-            val  userName=it[StoredKeys.userName]?:""
-            val  hash=it[StoredKeys.hash]?:""
-            RegisterStoredModel(userName, hash)
+            val username = it[StoredKeys.userName] ?: ""
+            val hash = it[StoredKeys.hash] ?: ""
+            RegisterStoredModel(username, hash)
         }
 }
