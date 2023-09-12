@@ -19,6 +19,7 @@
             android:id="@+id/popularImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:contentDescription="@string/app_name"
             android:scaleType="centerCrop" />
 
         <View
@@ -39,25 +40,26 @@
         app:layout_constraintEnd_toEndOf="@+id/cardLayer"
         app:layout_constraintStart_toStartOf="@+id/cardLayer"
         app:layout_constraintTop_toBottomOf="@+id/cardLayer">
-<!--        name-->
+        <!--        name-->
         <TextView
             android:id="@+id/popularNameText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
             android:layout_marginHorizontal="@dimen/_10mdp"
             android:ellipsize="end"
+            android:gravity="center_vertical"
             android:maxLines="1"
-            android:text="kkjjllk"
             android:textColor="@color/jacarta"
             android:textSize="@dimen/_10mdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/popularPriceTxt"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="show recipe name"
+            android:contentDescription="@string/app_name"
 
-
-<!--price-->
+            />
+        <!--price-->
         <TextView
             android:id="@+id/popularPriceTxt"
             android:layout_width="wrap_content"
@@ -65,7 +67,6 @@
             android:layout_marginEnd="@dimen/_10mdp"
             android:drawablePadding="@dimen/_3mdp"
             android:gravity="center"
-            android:text="589"
             android:textColor="@color/jacarta"
             android:textSize="@dimen/_9font_mdp"
             app:drawableStartCompat="@drawable/ic_coins"
@@ -74,6 +75,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
+            tools:text="12345" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--ellipsize  add ... at the end of text when it going to more than one line -->
