@@ -43,7 +43,7 @@ class RecipeFragment : Fragment() {
         _binding = null
     }
 
-    suspend fun showUserName() {
+    private suspend fun showUserName() {
         registerViewModel.readData.collect {
             var userName = it.userName
             binding.usernameTxt.text = "Hello, $userName ${getEmojiByUnicode()}"
