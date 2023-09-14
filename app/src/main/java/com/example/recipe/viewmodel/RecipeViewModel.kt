@@ -25,7 +25,7 @@ class RecipeViewModel @Inject constructor(private val repository: RecipesReposit
     }
 
     //    Api
-    private val popularliveData = MutableLiveData<NetworkRequest<ResponseRecipes>>()
+     val popularliveData = MutableLiveData<NetworkRequest<ResponseRecipes>>()
     fun callPopularApi() = viewModelScope.launch {
         popularliveData.value = NetworkRequest.Loading()
         var response = repository.remote.getRecipes(fillMap())

@@ -22,6 +22,8 @@ class PopularAdapter @Inject constructor() : RecyclerView.Adapter<PopularAdapter
     }
 
     override fun getItemCount() = items.size
+    override fun getItemViewType(position: Int) = position
+    override fun getItemId(position: Int) = position.toLong()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(items[position])
@@ -54,7 +56,7 @@ class PopularAdapter @Inject constructor() : RecyclerView.Adapter<PopularAdapter
     }
 
     //    define DiffUtils
-    private fun setData(data: List<Result>) {
+    fun setData(data: List<Result>) {
         val adapterDiffUtils = BaseDiffUtils(items, data)
         val diffUtils = DiffUtil.calculateDiff(adapterDiffUtils)
         items = data
@@ -64,7 +66,7 @@ class PopularAdapter @Inject constructor() : RecyclerView.Adapter<PopularAdapter
 
     //    setClickListener
     private var onItemClickListener: ((Int) -> Unit)? = null
-    private fun setOnItemClickListener(listener: (Int) -> Unit) {
+    fun setOnItemClickListener(listener: (Int) -> Unit) {
         onItemClickListener = listener
     }
 
