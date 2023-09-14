@@ -16,16 +16,16 @@ import javax.inject.Inject
 @HiltViewModel
 class RecipeViewModel @Inject constructor(private val repository: RecipesRepository) : ViewModel() {
     //    popularApi
-    fun fillMap(): HashMap<String, String> {
+    private fun fillMap(): HashMap<String, String> {
         val hashMap: HashMap<String, String> = HashMap()
         hashMap[Constant.API_KEY] = Constant.MY_API_KEY
-        hashMap["sort"]="popularity"
-        hashMap["addRecipeInformation"]="true"
+        hashMap[Constant.SORT]=Constant.SORT_VALUE
+                hashMap[Constant.ADD_RECIPE_INFORMATION]=Constant.ADD_RECIPE_INFORMATION_Value
         return hashMap
     }
 
     //    Api
-    val popularliveData = MutableLiveData<NetworkRequest<ResponseRecipes>>()
+    private val popularliveData = MutableLiveData<NetworkRequest<ResponseRecipes>>()
     fun callPopularApi() = viewModelScope.launch {
         popularliveData.value = NetworkRequest.Loading()
         var response = repository.remote.getRecipes(fillMap())

@@ -9,4 +9,8 @@ object Constant {
   const  val REGISTER_USERNAME="register_username"
   const  val REGISTER_HASH="register_hash"
   const  val REGISTER_USERINFO="register_userinfo"
+  const  val SORT="sort"
+  const  val SORT_VALUE="popularity"
+  const  val ADD_RECIPE_INFORMATION="addRecipeInformation"
+  const  val ADD_RECIPE_INFORMATION_Value="true"
 }
