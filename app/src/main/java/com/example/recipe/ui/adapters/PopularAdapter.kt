@@ -43,6 +43,12 @@ class PopularAdapter @Inject constructor() : RecyclerView.Adapter<PopularAdapter
                     memoryCachePolicy(CachePolicy.ENABLED)
                     error(R.drawable.ic_placeholder)
                 }
+                //            click
+                root.setOnClickListener {
+                    onItemClickListener?.let {
+                        it(item.id!!)
+                    }
+                }
             }
         }
     }
@@ -55,4 +61,11 @@ class PopularAdapter @Inject constructor() : RecyclerView.Adapter<PopularAdapter
         diffUtils.dispatchUpdatesTo(this)
 
     }
+
+    //    setClickListener
+    private var onItemClickListener: ((Int) -> Unit)? = null
+    private fun setOnItemClickListener(listener: (Int) -> Unit) {
+        onItemClickListener = listener
+    }
+
 }
