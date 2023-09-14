@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recipe.databinding.ActivityMainBinding
 import com.example.recipe.databinding.ItemPopularBinding
 import com.example.recipe.models.recipes.ResponseRecipes
 import com.example.recipe.models.recipes.ResponseRecipes.Result
@@ -35,11 +34,5 @@ class PopularAdapter @Inject constructor() : RecyclerView.Adapter<PopularAdapter
     }
 
     //    define DiffUtils
-    private fun setData(data: List<Result>) {
-        val adapterDiffUtils = BaseDiffUtils(items, data)
-        val diffUtils = DiffUtil.calculateDiff(adapterDiffUtils)
-        items = data
-        diffUtils.dispatchUpdatesTo(this)
 
-    }
 }
