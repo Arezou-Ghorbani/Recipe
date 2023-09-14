@@ -39,7 +39,8 @@ class PopularAdapter @Inject constructor() : RecyclerView.Adapter<PopularAdapter
                 val splitImage = item.image!!.split(".")
                 var imageSize =
                     splitImage[1].replace(Constant.OLD_IMAGE_SIZE, Constant.NEW_IMAGE_SIZE)
-                popularImage.load("${splitImage[0]}-$imageSize") {
+//                popularImage.load("${splitImage[0]}-$imageSize") {
+                popularImage.load(item.image!!) {
                     crossfade(true)
                     crossfade(800)
                     memoryCachePolicy(CachePolicy.ENABLED)

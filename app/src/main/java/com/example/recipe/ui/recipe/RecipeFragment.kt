@@ -8,13 +8,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import com.example.recipe.databinding.FragmentRecipeBinding
+import com.example.recipe.models.recipes.ResponseRecipes
 import com.example.recipe.ui.adapters.PopularAdapter
+import com.example.recipe.utils.Constant
 import com.example.recipe.utils.NetworkRequest
 import com.example.recipe.viewmodel.RecipeViewModel
 import com.example.recipe.viewmodel.RegisterViewModel
 import com.todkars.shimmer.ShimmerRecyclerView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import setUpRecyclerView
 import showSnackBar
 import javax.inject.Inject
@@ -33,6 +37,9 @@ class RecipeFragment : Fragment() {
     //    adapter
     @Inject
     lateinit var popularAdapter: PopularAdapter
+
+    //    others
+    private var autoIndex = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -85,6 +92,8 @@ class RecipeFragment : Fragment() {
                             if (data.results!!.isNotEmpty()) {
                                 popularAdapter.setData(data.results)
                                 initPopularRecycler()
+                                automaticScroll(data.results)
+
                             }
                         }
                     }
@@ -106,6 +115,8 @@ class RecipeFragment : Fragment() {
     }
 
     private fun initPopularRecycler() {
+//        scroll just one with snapHelper
+        val snapHelper = LinearSnapHelper()
         binding.popularList.setUpRecyclerView(
             LinearLayoutManager(
                 requireContext(),
@@ -114,10 +125,22 @@ class RecipeFragment : Fragment() {
             ),
             popularAdapter
         )
+        snapHelper.attachToRecyclerView(binding.popularList)
         popularAdapter.setOnItemClickListener {
 //go to detailPagr
         }
     }
 
-
+    //automatic scroll
+    private fun automaticScroll(items: List<ResponseRecipes.Result>) {
+        lifecycleScope.launchWhenStarted {
+            repeat(100) {
+                delay(Constant.REPEAT_TIME)
+                if (autoIndex < items.size) {
+                    autoIndex += 1
+                } else autoIndex = 0
+                binding.popularList.smoothScrollToPosition(autoIndex)
+            }
+        }
+    }
 }

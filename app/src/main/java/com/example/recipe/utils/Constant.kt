@@ -13,6 +13,7 @@ object Constant {
     const val SORT_VALUE = "popularity"
     const val ADD_RECIPE_INFORMATION = "addRecipeInformation"
     const val ADD_RECIPE_INFORMATION_Value = "true"
-    const val OLD_IMAGE_SIZE="312*231.jpg"
-    const val NEW_IMAGE_SIZE="636*393.jpg"
+    const val OLD_IMAGE_SIZE = "312*231.jpg"
+    const val NEW_IMAGE_SIZE = "636*393.jpg"
+    const val REPEAT_TIME = 5000L
 }
