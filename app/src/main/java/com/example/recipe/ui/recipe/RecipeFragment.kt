@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import com.example.recipe.databinding.FragmentRecipeBinding
 import com.example.recipe.models.recipes.ResponseRecipes
 import com.example.recipe.ui.adapters.PopularAdapter
+import com.example.recipe.ui.adapters.RecentAdapter
 import com.example.recipe.utils.Constant
 import com.example.recipe.utils.NetworkRequest
 import com.example.recipe.viewmodel.RecipeViewModel
@@ -37,6 +38,8 @@ class RecipeFragment : Fragment() {
     //    adapter
     @Inject
     lateinit var popularAdapter: PopularAdapter
+    @Inject
+    lateinit var recentAdapter: RecentAdapter
 
     //    others
     private var autoIndex = 0
@@ -58,7 +61,9 @@ class RecipeFragment : Fragment() {
         }
 //        call popular recipeApi
         viewModel.callPopularApi()
+        viewModel.callRecentApi()
         loadPopularData()
+        loadRecentData()
     }
 
     override fun onDestroyView() {
@@ -108,6 +113,35 @@ class RecipeFragment : Fragment() {
         }
     }
 
+    private fun loadRecentData() {
+        binding.apply {
+            viewModel.recentRecipesLiveData.observe(viewLifecycleOwner) { response ->
+                when (response) {
+                    is NetworkRequest.Loading -> {
+                        showHideShimmer(true, recipesList)
+                    }
+                    is NetworkRequest.Success -> {
+                        showHideShimmer(false, recipesList)
+
+                        response.data?.let { data ->
+                            if (data.results!!.isNotEmpty()) {
+                                recentAdapter.setData(data.results)
+                                initRecentRecycler()
+
+                            }
+                        }
+                    }
+
+                    is NetworkRequest.Error -> {
+                        showHideShimmer(false, popularList)
+                        binding.root.showSnackBar(response.message!!)
+                    }
+                }
+            }
+
+        }
+    }
+
     private fun showHideShimmer(isVisible: Boolean, shimmer: ShimmerRecyclerView) {
         shimmer.apply {
             if (isVisible) shimmer.showShimmer() else shimmer.hideShimmer()
@@ -129,6 +163,19 @@ class RecipeFragment : Fragment() {
         popularAdapter.setOnItemClickListener {
 //go to detailPagr
         }
+    }
+    private fun initRecentRecycler() {
+
+        binding.recipesList.setUpRecyclerView(
+            LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.VERTICAL,
+                false
+            ),
+            recentAdapter
+        )
+//        popularAdapter.setOnItemClickListener {
+//go to detailPage
     }
 
     //automatic scroll

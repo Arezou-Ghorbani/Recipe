@@ -12,8 +12,14 @@ object Constant {
     const val SORT = "sort"
     const val SORT_VALUE = "popularity"
     const val ADD_RECIPE_INFORMATION = "addRecipeInformation"
-    const val ADD_RECIPE_INFORMATION_Value = "true"
+    const val ADD_RECIPE_INFORMATION_VALUE = "true"
     const val OLD_IMAGE_SIZE = "312*231.jpg"
     const val NEW_IMAGE_SIZE = "636*393.jpg"
     const val REPEAT_TIME = 5000L
+
+    //    Recent Recipes
+    const val TYPE = "type"
+    const val TYPE_VALUE = "main course"
+    const val DIET = "diet"
+    const val DIET_VALUE = "Gluten Free "
 }
