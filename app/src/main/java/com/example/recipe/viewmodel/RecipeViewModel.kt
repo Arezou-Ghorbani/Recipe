@@ -39,6 +39,7 @@ class RecipeViewModel @Inject constructor(private val repository: RecipesReposit
         hashMap[Constant.API_KEY] = Constant.MY_API_KEY
         hashMap[Constant.TYPE] = Constant.TYPE_VALUE
         hashMap[Constant.DIET] = Constant.DIET_VALUE
+        hashMap["number"] = "50"
         hashMap[Constant.ADD_RECIPE_INFORMATION] = Constant.ADD_RECIPE_INFORMATION_VALUE
         return hashMap
     }

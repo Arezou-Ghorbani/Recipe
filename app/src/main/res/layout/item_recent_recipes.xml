@@ -60,6 +60,7 @@
         android:textColor="@color/dolphinGray"
         android:textColorLink="@color/dolphinGray"
         android:textSize="@dimen/_8font_mdp"
+
         app:layout_constraintBottom_toTopOf="@id/recipeInfoLay"
         app:layout_constraintEnd_toEndOf="@id/recipeNameTxt"
         app:layout_constraintStart_toStartOf="@+id/recipeNameTxt"

@@ -4,7 +4,9 @@ import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -13,6 +15,7 @@ import com.example.recipe.R
 import com.example.recipe.databinding.ItemPopularBinding
 import com.example.recipe.databinding.ItemRecentRecipesBinding
 import com.example.recipe.models.recipes.ResponseRecipes
+import minToHour
 import setDynamicColorOnTextView
 import javax.inject.Inject
 
@@ -37,16 +40,30 @@ class RecentAdapter @Inject constructor() : RecyclerView.Adapter<RecentAdapter.V
     override fun getItemViewType(position: Int) = position
     override fun getItemId(position: Int) = position.toLong()
 
+    //    for using animations
+    //  just for the amount of view which is showing in screen to user
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        holder.initAnim()
+    }
+
+    //when a view is disappearing from the window
+    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        holder.clearAnim()
+    }
 
     inner class ViewHolder : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ResponseRecipes.Result) {
             binding.apply {
 //                text
                 recipeNameTxt.text = item.title
-                recipeDescTxt.text = item.summary
+//                when a data has HTML tags we can format it
+                val htmlFormatter = HtmlCompat.fromHtml(item.summary!!, HtmlCompat.FROM_HTML_MODE_COMPACT)
+                recipeDescTxt.text = htmlFormatter
                 recipeLikeTxt.text = item.aggregateLikes.toString()
                 recipeHealthTxt.text = item.healthScore.toString()
-                recipeTimeTxt.text = item.readyInMinutes.toString() + "min"
+                recipeTimeTxt.text = item.readyInMinutes!!.minToHour()
                 if (item.vegan!!)
                     recipeVeganTxt.setDynamicColorOnTextView(
                         R.color.caribbean_green
@@ -70,6 +87,14 @@ class RecentAdapter @Inject constructor() : RecyclerView.Adapter<RecentAdapter.V
                     error(R.drawable.ic_placeholder)
                 }
             }
+        }
+
+        fun initAnim() {
+            binding.root.animation = AnimationUtils.loadAnimation(context, R.anim.item_anim)
+        }
+
+        fun clearAnim() {
+            binding.root.clearAnimation()
         }
     }
 

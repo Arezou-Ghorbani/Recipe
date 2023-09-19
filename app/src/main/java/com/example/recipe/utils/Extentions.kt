@@ -38,3 +38,13 @@ fun TextView.setDynamicColorOnTextView(color: Int) {
         )
     )
 }
+
+fun Int.minToHour(): String {
+    var time: String
+    val hours: Int = this / 60
+    val min: Int = this % 60
+    time = if (hours > 0) "${hours}h:${min}min"
+     else "${min}min"
+
+    return time
+}
