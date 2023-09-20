@@ -5,7 +5,7 @@ import com.example.recipe.models.recipes.ResponseRecipes
 import com.google.gson.Gson
 
 /**Created by Arezou-Ghorbani on 20,September,2023,ArezouGhorbaniii@gmail.com**/
-class TypeConverter {
+class RecipeTypeConverter {
     private var gson = Gson()
 
     @TypeConverter
