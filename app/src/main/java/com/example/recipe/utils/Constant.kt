@@ -22,4 +22,8 @@ object Constant {
     const val TYPE_VALUE = "main course"
     const val DIET = "diet"
     const val DIET_VALUE = "Gluten Free "
+
+    //    RecipeEntity
+    const val RECIPE_TABLE_NAME = "recipe_table_name"
+    const val RECIPE_DATABASE_NAME = "recipe_database_name"
 }
