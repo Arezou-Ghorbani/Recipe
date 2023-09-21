@@ -12,7 +12,7 @@ class RecipeTypeConverter {
     fun recipeToJson(recipes: ResponseRecipes): String {
         return gson.toJson(recipes)
     }
-
+    @TypeConverter
     fun jsonToRecipe(json: String): ResponseRecipes {
         return gson.fromJson(json, ResponseRecipes::class.java)
     }

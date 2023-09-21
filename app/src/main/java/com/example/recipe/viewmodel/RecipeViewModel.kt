@@ -2,13 +2,16 @@ package com.example.recipe.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.recipe.data.database.RecipeEntity
 import com.example.recipe.data.repository.RecipesRepository
 import com.example.recipe.models.recipes.ResponseRecipes
 import com.example.recipe.utils.Constant
 import com.example.recipe.utils.NetworkRequest
 import com.example.recipe.utils.NetworkResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
@@ -16,7 +19,7 @@ import javax.inject.Inject
 /**Created by Arezou-Ghorbani on 13,September,2023,ArezouGhorbaniii@gmail.com**/
 @HiltViewModel
 class RecipeViewModel @Inject constructor(private val repository: RecipesRepository) : ViewModel() {
-    //    popularApi
+    //   ********  popularApi *************
     private fun popularQueries(): HashMap<String, String> {
         val hashMap: HashMap<String, String> = HashMap()
         hashMap[Constant.API_KEY] = Constant.MY_API_KEY
@@ -31,9 +34,26 @@ class RecipeViewModel @Inject constructor(private val repository: RecipesReposit
         popularliveData.value = NetworkRequest.Loading()
         var response = repository.remote.getRecipes(popularQueries())
         popularliveData.value = NetworkResponse(response).generalNetworkResponse()
+//      cashData
+        val cache = popularliveData.value?.data
+        if (cache != null) {
+            offlinePopular(cache)
+        }
     }
 
-    //    RecentApi
+    // local popular
+    private fun savePopularResponse(entity: RecipeEntity) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.local.saveRecipes(entity)
+        }
+
+    val readPopularFromDb = repository.local.loadRecipes().asLiveData()
+    private fun offlinePopular(response: ResponseRecipes) {
+        val entity = RecipeEntity(0, response)
+        savePopularResponse(entity)
+    }
+
+    //   ******** RecentApi **********
     private fun recentRecipes(): HashMap<String, String> {
         val hashMap: HashMap<String, String> = HashMap()
         hashMap[Constant.API_KEY] = Constant.MY_API_KEY
@@ -43,6 +63,7 @@ class RecipeViewModel @Inject constructor(private val repository: RecipesReposit
         hashMap[Constant.ADD_RECIPE_INFORMATION] = Constant.ADD_RECIPE_INFORMATION_VALUE
         return hashMap
     }
+
 
     //    Api Recent Recipes
     val recentRecipesLiveData = MutableLiveData<NetworkRequest<ResponseRecipes>>()

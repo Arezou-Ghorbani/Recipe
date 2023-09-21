@@ -13,6 +13,7 @@ interface RecipeAppDao {
     //    Recipe
     @Insert(onConflict = REPLACE)
     suspend fun saveRecipe(entity: RecipeEntity)
-    @Query("SELECT * FROM ${Constant.RECIPE_DATABASE_NAME} ORDER BY ID ASC")
+
+    @Query("SELECT * FROM ${Constant.RECIPE_TABLE_NAME} ORDER BY ID ASC")
     fun loadRecipes(): Flow<List<RecipeEntity>>
 }

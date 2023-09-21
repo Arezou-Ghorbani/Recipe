@@ -20,6 +20,7 @@ import com.example.recipe.viewmodel.RegisterViewModel
 import com.todkars.shimmer.ShimmerRecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import onceObserve
 import setUpRecyclerView
 import showSnackBar
 import javax.inject.Inject
@@ -38,6 +39,7 @@ class RecipeFragment : Fragment() {
     //    adapter
     @Inject
     lateinit var popularAdapter: PopularAdapter
+
     @Inject
     lateinit var recentAdapter: RecentAdapter
 
@@ -59,9 +61,9 @@ class RecipeFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             showUserName()
         }
-//        call popular recipeApi
-        viewModel.callPopularApi()
-        viewModel.callRecentApi()
+//        callData
+        callPopularData()
+//        viewModel.callRecentApi()
         loadPopularData()
         loadRecentData()
     }
@@ -90,14 +92,13 @@ class RecipeFragment : Fragment() {
                         showHideShimmer(true, popularList)
 
                     }
+
                     is NetworkRequest.Success -> {
                         showHideShimmer(false, popularList)
 
                         response.data?.let { data ->
                             if (data.results!!.isNotEmpty()) {
-                                popularAdapter.setData(data.results)
-                                initPopularRecycler()
-                                automaticScroll(data.results)
+                                fillAdapterData(data.results.toMutableList())
 
                             }
                         }
@@ -120,6 +121,7 @@ class RecipeFragment : Fragment() {
                     is NetworkRequest.Loading -> {
                         showHideShimmer(true, recipesList)
                     }
+
                     is NetworkRequest.Success -> {
                         showHideShimmer(false, recipesList)
 
@@ -164,6 +166,7 @@ class RecipeFragment : Fragment() {
 //go to detailPagr
         }
     }
+
     private fun initRecentRecycler() {
 
         binding.recipesList.setUpRecyclerView(
@@ -188,6 +191,31 @@ class RecipeFragment : Fragment() {
                 } else autoIndex = 0
                 binding.popularList.smoothScrollToPosition(autoIndex)
             }
+        }
+    }
+
+    //---Popular---//
+    private fun callPopularData() {
+        initPopularRecycler()
+        viewModel.readPopularFromDb.onceObserve(viewLifecycleOwner) { database ->
+            if (database.isNotEmpty()) {
+                database[0].responseRecipes.results?.let { result ->
+                    setupLoading(false, binding.popularList)
+                    fillAdapterData(result.toMutableList())
+                }
+            } else {
+                viewModel.callPopularApi()
+            }
+        }
+    }
+    private fun fillAdapterData(data: MutableList<ResponseRecipes.Result>) {
+        popularAdapter.setData(data)
+        automaticScroll(data)
+
+    }
+    private fun setupLoading(isShownLoading: Boolean, shimmer: ShimmerRecyclerView) {
+        shimmer.apply {
+            if (isShownLoading) showShimmer() else hideShimmer()
         }
     }
 }

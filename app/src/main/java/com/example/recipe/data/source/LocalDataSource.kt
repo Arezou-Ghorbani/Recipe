@@ -8,4 +8,5 @@ import javax.inject.Inject
 class LocalDataSource @Inject constructor(private val dao: RecipeAppDao) {
     //    Recipe
     suspend fun saveRecipes(entity: RecipeEntity) = dao.saveRecipe(entity)
+    fun loadRecipes() = dao.loadRecipes()
 }

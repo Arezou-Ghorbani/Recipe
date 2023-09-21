@@ -1,6 +1,9 @@
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipe.R
 import com.google.android.material.snackbar.Snackbar
@@ -47,4 +50,12 @@ fun Int.minToHour(): String {
      else "${min}min"
 
     return time
+}
+fun <T> LiveData<T>.onceObserve(owner: LifecycleOwner, observe: Observer<T>) {
+    observe(owner, object : Observer<T> {
+        override fun onChanged(t: T) {
+            removeObserver(this)
+            observe.onChanged(t)
+        }
+    })
 }
