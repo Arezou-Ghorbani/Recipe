@@ -61,9 +61,9 @@ class RecipeFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             showUserName()
         }
-//        callData
+//        callData-cash
         callPopularData()
-//        viewModel.callRecentApi()
+        callRecentData()
         loadPopularData()
         loadRecentData()
     }
@@ -144,6 +144,18 @@ class RecipeFragment : Fragment() {
         }
     }
 
+    private fun callRecentData() {
+        initRecentRecycler()
+        viewModel.readPopularFromDb.onceObserve(viewLifecycleOwner) { database ->
+            if (database.isNotEmpty() && database.size > 1) {
+                database[1].responseRecipes.results?.let { result ->
+                    setupLoading(false, binding.recipesList)
+                    recentAdapter.setData(result)
+                }
+            } else viewModel.callRecentApi()
+        }
+    }
+
     private fun showHideShimmer(isVisible: Boolean, shimmer: ShimmerRecyclerView) {
         shimmer.apply {
             if (isVisible) shimmer.showShimmer() else shimmer.hideShimmer()
@@ -208,11 +220,13 @@ class RecipeFragment : Fragment() {
             }
         }
     }
+
     private fun fillAdapterData(data: MutableList<ResponseRecipes.Result>) {
         popularAdapter.setData(data)
         automaticScroll(data)
 
     }
+
     private fun setupLoading(isShownLoading: Boolean, shimmer: ShimmerRecyclerView) {
         shimmer.apply {
             if (isShownLoading) showShimmer() else hideShimmer()

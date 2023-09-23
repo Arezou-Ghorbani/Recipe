@@ -71,7 +71,26 @@ class RecipeViewModel @Inject constructor(private val repository: RecipesReposit
         recentRecipesLiveData.value = NetworkRequest.Loading()
         var response = repository.remote.getRecipes(recentRecipes())
         recentRecipesLiveData.value = recentNetworkResponse(response)
+//   cash
+        val cache = popularliveData.value?.data
+        if (cache != null) {
+            offlineRecent(cache)
+        }
     }
+
+//    recentCash
+
+    private fun saveRecentResponse(entity: RecipeEntity) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.local.saveRecipes(entity)
+        }
+
+    private fun offlineRecent(response: ResponseRecipes) {
+        val entity = RecipeEntity(1, response)
+        saveRecentResponse(entity)
+    }
+
+    val readRecentFromDb = repository.local.loadRecipes().asLiveData()
 
     private fun recentNetworkResponse(response: Response<ResponseRecipes>): NetworkRequest<ResponseRecipes> {
         return when {
