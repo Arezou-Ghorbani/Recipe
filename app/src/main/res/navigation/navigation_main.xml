@@ -51,4 +51,9 @@
         android:name="com.example.recipe.ui.favorite.FavoriteFragment"
         android:label="RecipeFragment"
         tools:layout="@layout/fragment_favorite" />
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="com.example.recipe.ui.menu.MenuFragment"
+        android:label="menuFragment"
+        tools:layout="@layout/fragment_menu" />
 </navigation>
