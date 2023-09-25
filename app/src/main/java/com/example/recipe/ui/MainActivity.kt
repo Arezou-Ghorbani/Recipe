@@ -3,6 +3,7 @@ package com.example.recipe.ui
 import android.content.Context
 import android.os.Bundle
 import androidx.core.view.isVisible
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.recipe.R
@@ -38,6 +39,9 @@ class MainActivity : BaseActivity() {
                 else -> bottomNavVisibility(true)
             }
         }
+        binding.mainFab.setOnClickListener {
+            naveHost.navController.navigate(R.id.actionToMenu)
+         }
     }
 
 
