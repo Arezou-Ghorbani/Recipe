@@ -3,10 +3,10 @@ package com.example.recipe.data.database
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.recipe.models.recipes.ResponseRecipes
-import com.example.recipe.utils.Constant
+import com.example.recipe.utils.Constants
 
 /**Created by Arezou-Ghorbani on 19,September,2023,ArezouGhorbaniii@gmail.com**/
-@Entity(tableName = Constant.RECIPE_TABLE_NAME)
+@Entity(tableName = Constants.RECIPE_TABLE_NAME)
 data class RecipeEntity(
     @PrimaryKey(autoGenerate = false)
     var id: Int = 0,

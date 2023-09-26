@@ -13,13 +13,12 @@ import coil.load
 import com.example.recipe.R
 import com.example.recipe.databinding.FragmentRegisterBinding
 import com.example.recipe.models.register.BodyRegister
-import com.example.recipe.utils.Constant
+import com.example.recipe.utils.Constants
 import com.example.recipe.utils.NetworkChecker
 import com.example.recipe.utils.NetworkRequest
 import com.example.recipe.viewmodel.RegisterViewModel
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import showSnackBar
 import javax.inject.Inject
 
@@ -71,7 +70,7 @@ class RegisterFragment : Fragment() {
                 lifecycleScope.launchWhenStarted {
                     networkChecker.checkNetworkAvailability().collect { state ->
                         if (state)
-                            viewModel.callRegisterApi(Constant.MY_API_KEY, body)
+                            viewModel.callRegisterApi(Constants.MY_API_KEY, body)
                         else {
                             root.showSnackBar(getString(R.string.checkConnection))
                         }

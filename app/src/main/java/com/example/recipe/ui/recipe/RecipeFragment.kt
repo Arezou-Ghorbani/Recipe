@@ -13,7 +13,7 @@ import com.example.recipe.databinding.FragmentRecipeBinding
 import com.example.recipe.models.recipes.ResponseRecipes
 import com.example.recipe.ui.adapters.PopularAdapter
 import com.example.recipe.ui.adapters.RecentAdapter
-import com.example.recipe.utils.Constant
+import com.example.recipe.utils.Constants
 import com.example.recipe.utils.NetworkRequest
 import com.example.recipe.viewmodel.RecipeViewModel
 import com.example.recipe.viewmodel.RegisterViewModel
@@ -44,7 +44,7 @@ class RecipeFragment : Fragment() {
     lateinit var recentAdapter: RecentAdapter
 
     //    others
-    private var autoIndex = 0
+    private var autoScrollIndex = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -194,14 +194,16 @@ class RecipeFragment : Fragment() {
     }
 
     //automatic scroll
-    private fun automaticScroll(items: List<ResponseRecipes.Result>) {
-        lifecycleScope.launchWhenStarted {
-            repeat(100) {
-                delay(Constant.REPEAT_TIME)
-                if (autoIndex < items.size) {
-                    autoIndex += 1
-                } else autoIndex = 0
-                binding.popularList.smoothScrollToPosition(autoIndex)
+    private fun autoScrollPopular(list: List<ResponseRecipes.Result>) {
+        lifecycleScope.launchWhenCreated {
+            repeat(Constants.REPEAT_TIME) {
+                delay(Constants.DELAY_TIME)
+                if (autoScrollIndex < list.size) {
+                    autoScrollIndex += 1
+                } else {
+                    autoScrollIndex = 0
+                }
+                binding.popularList.smoothScrollToPosition(autoScrollIndex)
             }
         }
     }
@@ -223,7 +225,7 @@ class RecipeFragment : Fragment() {
 
     private fun fillAdapterData(data: MutableList<ResponseRecipes.Result>) {
         popularAdapter.setData(data)
-        automaticScroll(data)
+        autoScrollPopular(data)
 
     }
 

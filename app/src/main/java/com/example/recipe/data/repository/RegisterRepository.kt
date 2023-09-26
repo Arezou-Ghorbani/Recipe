@@ -10,7 +10,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.example.recipe.data.source.RemoteDataSource
 import com.example.recipe.models.register.BodyRegister
 import com.example.recipe.models.register.RegisterStoredModel
-import com.example.recipe.utils.Constant
+import com.example.recipe.utils.Constants
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
@@ -29,12 +29,12 @@ class RegisterRepository @Inject constructor(
 
     //Store user info
     private object StoredKeys {
-        val userName = stringPreferencesKey(Constant.REGISTER_USERNAME)
-        val hash = stringPreferencesKey(Constant.REGISTER_HASH)
+        val userName = stringPreferencesKey(Constants.REGISTER_USERNAME)
+        val hash = stringPreferencesKey(Constants.REGISTER_HASH)
 
     }
 
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(Constant.REGISTER_USERINFO)
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(Constants.REGISTER_USER_INFO)
     suspend fun saveRegisterData(userName: String, hash: String) {
         context.dataStore.edit {
             it[StoredKeys.userName] = userName

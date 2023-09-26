@@ -8,9 +8,8 @@ import coil.load
 import coil.request.CachePolicy
 import com.example.recipe.R
 import com.example.recipe.databinding.ItemPopularBinding
-import com.example.recipe.models.recipes.ResponseRecipes
 import com.example.recipe.models.recipes.ResponseRecipes.Result
-import com.example.recipe.utils.Constant
+import com.example.recipe.utils.Constants
 import javax.inject.Inject
 
 class PopularAdapter @Inject constructor() : RecyclerView.Adapter<PopularAdapter.ViewHolder>() {
@@ -38,7 +37,7 @@ class PopularAdapter @Inject constructor() : RecyclerView.Adapter<PopularAdapter
 //                Image
                 val splitImage = item.image!!.split(".")
                 var imageSize =
-                    splitImage[1].replace(Constant.OLD_IMAGE_SIZE, Constant.NEW_IMAGE_SIZE)
+                    splitImage[1].replace(Constants.OLD_IMAGE_SIZE, Constants.NEW_IMAGE_SIZE)
 //                popularImage.load("${splitImage[0]}-$imageSize") {
                 popularImage.load(item.image!!) {
                     crossfade(true)

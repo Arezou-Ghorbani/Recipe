@@ -3,7 +3,7 @@ package com.example.recipe.data.network
 import com.example.recipe.models.recipes.ResponseRecipes
 import com.example.recipe.models.register.BodyRegister
 import com.example.recipe.models.register.ResponseRegister
-import com.example.recipe.utils.Constant
+import com.example.recipe.utils.Constants
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -15,7 +15,7 @@ import retrofit2.http.QueryMap
 interface ApiServices {
     @POST("users/connect")
     suspend fun postRegister(
-        @Query(Constant.API_KEY) api: String,
+        @Query(Constants.API_KEY) api: String,
         @Body body: BodyRegister
     ): Response<ResponseRegister>
 

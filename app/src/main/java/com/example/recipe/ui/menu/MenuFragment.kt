@@ -47,7 +47,6 @@ class MenuFragment : BottomSheetDialogFragment() {
 
     private fun fillChips(list: MutableList<String>, view: ChipGroup) {
         list.forEach {
-
 //            define View (chips) dynamically
             val chip = Chip(requireContext())
             val drawable = ChipDrawable.createFromAttributes(

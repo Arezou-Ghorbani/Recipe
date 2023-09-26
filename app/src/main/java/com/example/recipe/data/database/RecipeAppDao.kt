@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
-import com.example.recipe.utils.Constant
+import com.example.recipe.utils.Constants
 import kotlinx.coroutines.flow.Flow
 
 /**Created by Arezou-Ghorbani on 20,September,2023,ArezouGhorbaniii@gmail.com**/
@@ -14,6 +14,6 @@ interface RecipeAppDao {
     @Insert(onConflict = REPLACE)
     suspend fun saveRecipe(entity: RecipeEntity)
 
-    @Query("SELECT * FROM ${Constant.RECIPE_TABLE_NAME} ORDER BY ID ASC")
+    @Query("SELECT * FROM ${Constants.RECIPE_TABLE_NAME} ORDER BY ID ASC")
     fun loadRecipes(): Flow<List<RecipeEntity>>
 }

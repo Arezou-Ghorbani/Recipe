@@ -3,7 +3,7 @@ package com.example.recipe.di
 import android.content.Context
 import androidx.room.Room
 import com.example.recipe.data.database.RecipeAppDatabase
-import com.example.recipe.utils.Constant
+import com.example.recipe.utils.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,7 +18,7 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideDataBase(@ApplicationContext context: Context) = Room.databaseBuilder(
-        context, RecipeAppDatabase::class.java, Constant.RECIPE_TABLE_NAME
+        context, RecipeAppDatabase::class.java, Constants.RECIPE_TABLE_NAME
     )
         .allowMainThreadQueries()
         .fallbackToDestructiveMigration()
