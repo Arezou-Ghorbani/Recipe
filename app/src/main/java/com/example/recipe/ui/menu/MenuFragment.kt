@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.recipe.R
 import com.example.recipe.databinding.FragmentMenuBinding
 import com.example.recipe.viewmodel.MenuViewModel
@@ -21,16 +22,23 @@ class MenuFragment : BottomSheetDialogFragment() {
     //Binding
     private var _binding: FragmentMenuBinding? = null
     private val binding get() = _binding!!
-    private var chipCounter = 1
 
     //    viewModel  ->without kotlin delegate for example "context" is not available
     private lateinit var viewModel: MenuViewModel
+
+    //    other
+    private var chipCounter = 1
+    private var chipMealTitle = ""
+    private var chipMealId = 0
+    private var chipDietTitle = ""
+    private var chipDietId = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[MenuViewModel::class.java]
     }
 
-    override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMenuBinding.inflate(layoutInflater)
@@ -40,8 +48,35 @@ class MenuFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            fillChips(viewModel.mealsList(),mealChipGroup)
-            fillChips(viewModel.dietsList(),dietChipGroup)
+            fillChips(viewModel.mealsList(), mealChipGroup)
+            fillChips(viewModel.dietsList(), dietChipGroup)
+
+            //Meal chips - click
+            mealChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+                var chip: Chip
+                checkedIds.forEach {
+                    chip = group.findViewById(it)
+                    chipMealTitle = chip.text.toString().lowercase()
+                    chipMealId = it
+                }
+            }
+            //Diet chips - click
+            dietChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+                var chip: Chip
+                checkedIds.forEach {
+                    chip = group.findViewById(it)
+                    chipDietTitle = chip.text.toString().lowercase()
+                    chipDietId = it
+                }
+            }
+            //Submit
+            submitBtn.setOnClickListener {
+                viewModel.saveToStore(chipMealTitle, chipMealId, chipDietTitle, chipDietId)
+//                findNavController().navigate(
+//                    MenuFragmentDirections.actionMenuToRecipe().setIsUpdateData(true)
+//                )
+                287 min 15
+            }
         }
     }
 
