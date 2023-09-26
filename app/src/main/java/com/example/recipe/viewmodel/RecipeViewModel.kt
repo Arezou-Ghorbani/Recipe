@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.recipe.data.database.RecipeEntity
+import com.example.recipe.data.repository.MenuRepository
 import com.example.recipe.data.repository.RecipesRepository
 import com.example.recipe.models.recipes.ResponseRecipes
 import com.example.recipe.utils.Constants
@@ -18,14 +19,17 @@ import javax.inject.Inject
 
 /**Created by Arezou-Ghorbani on 13,September,2023,ArezouGhorbaniii@gmail.com**/
 @HiltViewModel
-class RecipeViewModel @Inject constructor(private val repository: RecipesRepository) : ViewModel() {
+class RecipeViewModel @Inject constructor(   private val repository: RecipesRepository,
+                                             private val menuRepository: MenuRepository
+) : ViewModel() {
     //   ********  popularApi *************
-    private fun popularQueries(): HashMap<String, String> {
-        val hashMap: HashMap<String, String> = HashMap()
-        hashMap[Constants.API_KEY] = Constants.MY_API_KEY
-        hashMap[Constants.SORT] = Constants.SORT_VALUE
-        hashMap[Constants.ADD_RECIPE_INFORMATION] = Constants.ADD_RECIPE_INFORMATION_VALUE
-        return hashMap
+    fun popularQueries(): HashMap<String, String> {
+        val queries: HashMap<String, String> = HashMap()
+        queries[Constants.API_KEY] = Constants.MY_API_KEY
+        queries[Constants.SORT] = Constants.POPULARITY
+        queries[Constants.NUMBER] = Constants.LIMITED_COUNT.toString()
+        queries[Constants.ADD_RECIPE_INFORMATION] = Constants.TRUE
+        return queries
     }
 
     //    Api
@@ -54,14 +58,22 @@ class RecipeViewModel @Inject constructor(private val repository: RecipesReposit
     }
 
     //   ******** RecentApi **********
-    private fun recentRecipes(): HashMap<String, String> {
-        val hashMap: HashMap<String, String> = HashMap()
-        hashMap[Constants.API_KEY] = Constants.MY_API_KEY
-        hashMap[Constants.TYPE] = Constants.MAIN_COURSE
-        hashMap[Constants.DIET] = Constants.GLUTEN_FREE
-        hashMap["number"] = "50"
-        hashMap[Constants.ADD_RECIPE_INFORMATION] = Constants.ADD_RECIPE_INFORMATION_VALUE
-        return hashMap
+    private var mealType = Constants.MAIN_COURSE
+    private var dietType = Constants.GLUTEN_FREE
+    fun recentQueries(): HashMap<String, String> {
+        viewModelScope.launch {
+            menuRepository.readMenuData.collect {
+                mealType = it.meal
+                dietType = it.diet
+            }
+        }
+        val queries: HashMap<String, String> = HashMap()
+        queries[Constants.API_KEY] = Constants.MY_API_KEY
+        queries[Constants.TYPE] = mealType
+        queries[Constants.DIET] = dietType
+        queries[Constants.NUMBER] = Constants.FULL_COUNT.toString()
+        queries[Constants.ADD_RECIPE_INFORMATION] = Constants.TRUE
+        return queries
     }
 
 
@@ -69,7 +81,7 @@ class RecipeViewModel @Inject constructor(private val repository: RecipesReposit
     val recentRecipesLiveData = MutableLiveData<NetworkRequest<ResponseRecipes>>()
     fun callRecentApi() = viewModelScope.launch {
         recentRecipesLiveData.value = NetworkRequest.Loading()
-        var response = repository.remote.getRecipes(recentRecipes())
+        var response = repository.remote.getRecipes(recentQueries())
         recentRecipesLiveData.value = recentNetworkResponse(response)
 //   cash
         val cache = popularliveData.value?.data
