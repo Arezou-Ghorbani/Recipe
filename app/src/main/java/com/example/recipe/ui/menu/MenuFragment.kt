@@ -72,10 +72,11 @@ class MenuFragment : BottomSheetDialogFragment() {
             //Submit
             submitBtn.setOnClickListener {
                 viewModel.saveToStore(chipMealTitle, chipMealId, chipDietTitle, chipDietId)
-//                findNavController().navigate(
-//                    MenuFragmentDirections.actionMenuToRecipe().setIsUpdateData(true)
-//                )
-                287 min 15
+                findNavController().navigate(
+                    MenuFragmentDirections.actionMenuToRecipe().setIsUpdateData(true)
+
+                )
+
             }
         }
     }
