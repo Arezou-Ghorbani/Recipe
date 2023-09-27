@@ -55,10 +55,7 @@ class RecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.apply {
-
-        }
-        lifecycleScope.launchWhenStarted {
+            lifecycleScope.launchWhenStarted {
             showUserName()
         }
 //        callData-cash
@@ -67,12 +64,6 @@ class RecipeFragment : Fragment() {
         loadPopularData()
         loadRecentData()
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     private suspend fun showUserName() {
         registerViewModel.readData.collect {
             var userName = it.userName
@@ -233,5 +224,9 @@ class RecipeFragment : Fragment() {
         shimmer.apply {
             if (isShownLoading) showShimmer() else hideShimmer()
         }
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

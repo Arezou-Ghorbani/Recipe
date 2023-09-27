@@ -11,6 +11,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.example.recipe.models.menu.MenuStoredModel
 import com.example.recipe.utils.Constants
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -18,6 +19,7 @@ import okio.IOException
 import javax.inject.Inject
 
 /**Created by Arezou-Ghorbani on 26,September,2023,ArezouGhorbaniii@gmail.com**/
+@ActivityRetainedScoped
 class MenuRepository @Inject constructor(@ApplicationContext private val context: Context) {
  private object StoredKey {
   val selectMealTitle = stringPreferencesKey(Constants.MENU_MEAL_TITLE_KEY)
