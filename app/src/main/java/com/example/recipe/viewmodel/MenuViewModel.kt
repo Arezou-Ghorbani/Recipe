@@ -12,6 +12,8 @@ import javax.inject.Inject
 /**Created by Arezou-Ghorbani on 25,September,2023,ArezouGhorbaniii@gmail.com**/
 @HiltViewModel
 class MenuViewModel @Inject constructor(private val repository: MenuRepository) : ViewModel() {
+    val readMenuStoredItems = repository.readMenuData
+
     fun mealsList(): MutableList<String> {
         return mutableListOf(
             "Main Course",
@@ -43,6 +45,5 @@ class MenuViewModel @Inject constructor(private val repository: MenuRepository) 
         Dispatchers.IO) {
         repository.saveMenuData(meal, mealId, diet, dietId)
     }
-    val readMenuStoredItems = repository.readMenuData
 
 }

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import com.example.recipe.R
 import com.example.recipe.databinding.FragmentMenuBinding
@@ -15,6 +16,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
+import onceObserve
 
 /**Created by Arezou-Ghorbani on 23,September,2023,ArezouGhorbaniii@gmail.com**/
 @AndroidEntryPoint
@@ -50,8 +52,14 @@ class MenuFragment : BottomSheetDialogFragment() {
         binding.apply {
             fillChips(viewModel.mealsList(), mealChipGroup)
             fillChips(viewModel.dietsList(), dietChipGroup)
-
-            //Meal chips - click
+            //Read from menu stored data
+            viewModel.readMenuStoredItems.asLiveData().onceObserve(viewLifecycleOwner) {
+                chipMealTitle = it.meal
+                chipDietTitle = it.diet
+                updateChip(it.mealId, mealChipGroup)
+                updateChip(it.dietId, dietChipGroup)
+            }
+                //Meal chips - click
             mealChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
                 var chip: Chip
                 checkedIds.forEach {
@@ -95,5 +103,9 @@ class MenuFragment : BottomSheetDialogFragment() {
             view.addView(chip)
         }
     }
-
+    private fun updateChip(id: Int, view: ChipGroup) {
+        if (id != 0) {
+            view.findViewById<Chip>(id).isChecked = true
+        }
+    }
 }
