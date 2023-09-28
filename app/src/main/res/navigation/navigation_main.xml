@@ -71,4 +71,14 @@
             app:popUpTo="@id/recipeFragment"
             app:popUpToInclusive="true" />
     </dialog>
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.example.recipe.ui.detail.DetailFragment"
+        android:label="fragment_detail"
+        tools:layout="@layout/fragment_detail" >
+        <argument
+            android:name="recipeID"
+            app:argType="integer" />
+
+    </fragment>
 </navigation>
