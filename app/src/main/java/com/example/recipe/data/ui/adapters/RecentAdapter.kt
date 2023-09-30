@@ -1,4 +1,4 @@
-package com.example.recipe.ui.adapters
+package com.example.recipe.data.ui.adapters
 
 import android.content.Context
 import android.graphics.Color
@@ -25,14 +25,14 @@ class RecentAdapter @Inject constructor() : RecyclerView.Adapter<RecentAdapter.V
     private var items = emptyList<ResponseRecipes.Result>()
     private lateinit var context: Context
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         binding =
             ItemRecentRecipesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         context = parent.context
         return ViewHolder()
     }
 
-    override fun onBindViewHolder(holder: RecentAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(items[position])
     }
 
@@ -59,7 +59,8 @@ class RecentAdapter @Inject constructor() : RecyclerView.Adapter<RecentAdapter.V
 //                text
                 recipeNameTxt.text = item.title
 //                when a data has HTML tags we can format it
-                val htmlFormatter = HtmlCompat.fromHtml(item.summary!!, HtmlCompat.FROM_HTML_MODE_COMPACT)
+                val htmlFormatter =
+                    HtmlCompat.fromHtml(item.summary!!, HtmlCompat.FROM_HTML_MODE_COMPACT)
                 recipeDescTxt.text = htmlFormatter
                 recipeLikeTxt.text = item.aggregateLikes.toString()
                 recipeHealthTxt.text = item.healthScore.toString()
@@ -77,6 +78,10 @@ class RecentAdapter @Inject constructor() : RecyclerView.Adapter<RecentAdapter.V
                     in 60..89 -> recipeHealthTxt.setDynamicColorOnTextView(R.color.chineseYellow)
                     in 0..59 -> recipeHealthTxt.setDynamicColorOnTextView(R.color.tart_orange)
                     else -> recipeHealthTxt.setDynamicColorOnTextView(R.color.gray)
+                }
+//                click
+                root.setOnClickListener {
+                    onItemClickListener?.let { it(item.id!!) }
                 }
 
 //                rv image
@@ -96,6 +101,12 @@ class RecentAdapter @Inject constructor() : RecyclerView.Adapter<RecentAdapter.V
         fun clearAnim() {
             binding.root.clearAnimation()
         }
+    }
+
+    private var onItemClickListener: ((Int) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: (Int) -> Unit) {
+        onItemClickListener = listener
     }
 
     fun setData(data: List<ResponseRecipes.Result>) {
