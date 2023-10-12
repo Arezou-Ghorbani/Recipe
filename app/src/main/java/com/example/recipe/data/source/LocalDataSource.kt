@@ -3,6 +3,7 @@ package com.example.recipe.data.source
 import com.example.recipe.data.entity.FavoriteEntity
 import com.example.recipe.data.database.RecipeAppDao
 import com.example.recipe.data.entity.DetailEntity
+import com.example.recipe.data.entity.RecipeEntity
 import javax.inject.Inject
 
 /**Created by Arezou-Ghorbani on 21,September,2023,ArezouGhorbaniii@gmail.com**/

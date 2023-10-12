@@ -60,28 +60,28 @@ class RecipeFragment : Fragment() {
         //Show username
         lifecycleScope.launchWhenCreated { showUsername() }
         //Call data
-//        callPopularData()
-//        callRecentData()
+        callPopularData()
+        callRecentData()
         //Load data
         loadPopularData()
         loadRecentData()
     }
 
-    //---Popular---//
-//    private fun callPopularData() {
-//        initPopularRecycler()
-//        viewModel.readPopularFromDb.onceObserve(viewLifecycleOwner) { database ->
-//            if (database.isNotEmpty()) {
-//                database[0].
-//                database[0].response.results?.let { result ->
-//                    setupLoading(false, binding.popularList)
-//                    fillPopularAdapter(result.toMutableList())
-//                }
-//            } else {
-//                viewModel.callPopularApi(viewModel.popularQueries())
-//            }
-//        }
-//    }
+   // ---Popular---//
+    private fun callPopularData() {
+        initPopularRecycler()
+        viewModel.readPopularFromDb.onceObserve(viewLifecycleOwner) { database ->
+            if (database.isNotEmpty()) {
+                database[0].response.results?.let { result ->
+                    setupLoading(false, binding.popularList)
+                    fillPopularAdapter(result.toMutableList())
+                }
+            } else {
+                viewModel.callPopularApi(viewModel.popularQueries())
+            }
+        }
+
+    }
 
     private fun loadPopularData() {
         binding.apply {
@@ -140,20 +140,20 @@ class RecipeFragment : Fragment() {
         }
     }
 
-//    //---Recent---//
-//    private fun callRecentData() {
-//        initRecentRecycler()
-//        viewModel.readRecentFromDb.onceObserve(viewLifecycleOwner) { database ->
-//            if (database.isNotEmpty() && database.size > 1 && !args.isUpdateData) {
-//                database[1].response.results?.let { result ->
-//                    setupLoading(false, binding.recipesList)
-//                    recentAdapter.setData(result)
-//                }
-//            } else {
-//                viewModel.callRecentApi(viewModel.recentQueries())
-//            }
-//        }
-//    }
+    //---Recent---//
+    private fun callRecentData() {
+        initRecentRecycler()
+        viewModel.readRecentFromDb.onceObserve(viewLifecycleOwner) { database ->
+            if (database.isNotEmpty() && database.size > 1 && !args.isUpdateData) {
+                database[1].response.results?.let { result ->
+                    setupLoading(false, binding.recipesList)
+                    recentAdapter.setData(result)
+                }
+            } else {
+                viewModel.callRecentApi(viewModel.recentQueries())
+            }
+        }
+    }
 
     private fun loadRecentData() {
         binding.apply {

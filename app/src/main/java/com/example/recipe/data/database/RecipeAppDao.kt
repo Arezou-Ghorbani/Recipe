@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
 import com.example.recipe.data.entity.DetailEntity
 import com.example.recipe.data.entity.FavoriteEntity
+import com.example.recipe.data.entity.RecipeEntity
 import com.example.recipe.utils.Constants
 import kotlinx.coroutines.flow.Flow
 
