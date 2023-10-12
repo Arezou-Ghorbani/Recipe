@@ -2,6 +2,7 @@ package com.example.recipe.models.register
 
 
 import com.google.gson.annotations.SerializedName
+/**Created by Arezou-Ghorbani on 12,October,2023,Arezoughorbaniii@gmail.com**/
 
 data class BodyRegister(
     @SerializedName("email")

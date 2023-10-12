@@ -1,15 +1,15 @@
-package com.example.recipe.data.database
+package com.example.recipe.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.recipe.models.recipes.ResponseRecipes
 import com.example.recipe.utils.Constants
 
-/**Created by Arezou-Ghorbani on 19,September,2023,ArezouGhorbaniii@gmail.com**/
+
+/**Created by Arezou-Ghorbani on 12,October,2023,Arezoughorbaniii@gmail.com**/
 @Entity(tableName = Constants.RECIPE_TABLE_NAME)
 data class RecipeEntity(
     @PrimaryKey(autoGenerate = false)
     var id: Int = 0,
-    var responseRecipes: ResponseRecipes
+    var response: ResponseRecipes
 )
-//    all response which is using in main recipe fragment completely is saving

@@ -10,13 +10,13 @@ import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import com.example.recipe.R
 import com.example.recipe.databinding.FragmentMenuBinding
+import com.example.recipe.utils.onceObserve
 import com.example.recipe.viewmodel.MenuViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
-import onceObserve
 
 /**Created by Arezou-Ghorbani on 23,September,2023,ArezouGhorbaniii@gmail.com**/
 @AndroidEntryPoint
@@ -81,7 +81,7 @@ class MenuFragment : BottomSheetDialogFragment() {
             submitBtn.setOnClickListener {
                 viewModel.saveToStore(chipMealTitle, chipMealId, chipDietTitle, chipDietId)
                 findNavController().navigate(
-                    MenuFragmentDirections.actionMenuToRecipe().setIsUpdateData(true)
+                    com.example.recipe.ui.menu.MenuFragmentDirections.actionMenuToRecipe().setIsUpdateData(true)
 
                 )
 

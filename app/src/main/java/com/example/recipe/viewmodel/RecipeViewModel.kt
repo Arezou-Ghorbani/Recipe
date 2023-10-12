@@ -4,9 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.recipe.data.database.RecipeEntity
 import com.example.recipe.data.repository.MenuRepository
-import com.example.recipe.data.repository.RecipesRepository
+import com.example.recipe.data.repository.RecipeRepository
 import com.example.recipe.models.recipes.ResponseRecipes
 import com.example.recipe.utils.Constants
 import com.example.recipe.utils.NetworkRequest
@@ -19,10 +18,13 @@ import javax.inject.Inject
 
 /**Created by Arezou-Ghorbani on 13,September,2023,ArezouGhorbaniii@gmail.com**/
 @HiltViewModel
-class RecipeViewModel @Inject constructor(   private val repository: RecipesRepository,
-                                             private val menuRepository: MenuRepository
+class RecipeViewModel @Inject constructor(
+    private val repository: RecipeRepository,
+    private val menuRepository: MenuRepository
 ) : ViewModel() {
-    //   ********  popularApi *************
+
+    //---Popular---//
+    //Queries
     fun popularQueries(): HashMap<String, String> {
         val queries: HashMap<String, String> = HashMap()
         queries[Constants.API_KEY] = Constants.MY_API_KEY
@@ -32,34 +34,35 @@ class RecipeViewModel @Inject constructor(   private val repository: RecipesRepo
         return queries
     }
 
-    //    Api
-    val popularliveData = MutableLiveData<NetworkRequest<ResponseRecipes>>()
-    fun callPopularApi() = viewModelScope.launch {
-        popularliveData.value = NetworkRequest.Loading()
-        var response = repository.remote.getRecipes(popularQueries())
-        popularliveData.value = NetworkResponse(response).generalNetworkResponse()
-//      cashData
-        val cache = popularliveData.value?.data
-        if (cache != null) {
+    //Api
+    val popularData = MutableLiveData<NetworkRequest<ResponseRecipes>>()
+    fun callPopularApi(queries: Map<String, String>) = viewModelScope.launch {
+        popularData.value = NetworkRequest.Loading()
+        val response = repository.remote.getRecipes(queries)
+        popularData.value = NetworkResponse(response).generalNetworkResponse()
+        //Cache
+        val cache = popularData.value?.data
+        if (cache != null)
             offlinePopular(cache)
-        }
     }
 
-    // local popular
-    private fun savePopularResponse(entity: RecipeEntity) =
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.local.saveRecipes(entity)
-        }
+    //Local
+    private fun savePopular(entity: RecipeEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.local.saveRecipes(entity)
+    }
 
     val readPopularFromDb = repository.local.loadRecipes().asLiveData()
+
     private fun offlinePopular(response: ResponseRecipes) {
         val entity = RecipeEntity(0, response)
-        savePopularResponse(entity)
+        savePopular(entity)
     }
 
-    //   ******** RecentApi **********
+    //---Recent---//
+    //Queries
     private var mealType = Constants.MAIN_COURSE
     private var dietType = Constants.GLUTEN_FREE
+
     fun recentQueries(): HashMap<String, String> {
         viewModelScope.launch {
             menuRepository.readMenuData.collect {
@@ -76,42 +79,38 @@ class RecipeViewModel @Inject constructor(   private val repository: RecipesRepo
         return queries
     }
 
-
-    //    Api Recent Recipes
-    val recentRecipesLiveData = MutableLiveData<NetworkRequest<ResponseRecipes>>()
-    fun callRecentApi() = viewModelScope.launch {
-        recentRecipesLiveData.value = NetworkRequest.Loading()
-        var response = repository.remote.getRecipes(recentQueries())
-        recentRecipesLiveData.value = recentNetworkResponse(response)
-//   cash
-        val cache = popularliveData.value?.data
-        if (cache != null) {
+    //Api
+    val recentData = MutableLiveData<NetworkRequest<ResponseRecipes>>()
+    fun callRecentApi(queries: Map<String, String>) = viewModelScope.launch {
+        recentData.value = NetworkRequest.Loading()
+        val response = repository.remote.getRecipes(queries)
+        recentData.value = recentNetworkResponse(response)
+        //Cache
+        val cache = recentData.value?.data
+        if (cache != null)
             offlineRecent(cache)
-        }
     }
 
-//    recentCash
-
-    private fun saveRecentResponse(entity: RecipeEntity) =
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.local.saveRecipes(entity)
-        }
-
-    private fun offlineRecent(response: ResponseRecipes) {
-        val entity = RecipeEntity(1, response)
-        saveRecentResponse(entity)
+    //Local
+    private fun saveRecent(entity: RecipeEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.local.saveRecipes(entity)
     }
 
     val readRecentFromDb = repository.local.loadRecipes().asLiveData()
+
+    private fun offlineRecent(response: ResponseRecipes) {
+        val entity = RecipeEntity(1, response)
+        saveRecent(entity)
+    }
 
     private fun recentNetworkResponse(response: Response<ResponseRecipes>): NetworkRequest<ResponseRecipes> {
         return when {
             response.message().contains("timeout") -> NetworkRequest.Error("Timeout")
             response.code() == 401 -> NetworkRequest.Error("You are not authorized")
-            response.code() == 402 -> NetworkRequest.Error("your free limitation plan has finished")
-            response.code() == 422 -> NetworkRequest.Error("Api Key not found")
-            response.code() == 500 -> NetworkRequest.Error("Try Again")
-            response.body()!!.results.isNullOrEmpty() -> NetworkRequest.Error("Not Found Any Recipes!")
+            response.code() == 402 -> NetworkRequest.Error("Your free plan finished")
+            response.code() == 422 -> NetworkRequest.Error("Api key not found!")
+            response.code() == 500 -> NetworkRequest.Error("Try again")
+            response.body()!!.results.isNullOrEmpty() -> NetworkRequest.Error("Not found any recipe!")
             response.isSuccessful -> NetworkRequest.Success(response.body()!!)
             else -> NetworkRequest.Error(response.message())
         }

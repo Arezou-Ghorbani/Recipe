@@ -1,190 +1,131 @@
 package com.example.recipe.ui.recipe
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+
+import android.annotation.SuppressLint
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
+import com.example.recipe.R
 import com.example.recipe.databinding.FragmentRecipeBinding
 import com.example.recipe.models.recipes.ResponseRecipes
 import com.example.recipe.ui.adapters.PopularAdapter
 import com.example.recipe.ui.adapters.RecentAdapter
 import com.example.recipe.utils.Constants
 import com.example.recipe.utils.NetworkRequest
+import com.example.recipe.utils.onceObserve
+import com.example.recipe.utils.setupRecyclerview
+import com.example.recipe.utils.showSnackBar
 import com.example.recipe.viewmodel.RecipeViewModel
 import com.example.recipe.viewmodel.RegisterViewModel
 import com.todkars.shimmer.ShimmerRecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import onceObserve
-import setUpRecyclerView
-import showSnackBar
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
-/**Created by Arezou-Ghorbani on 10,September,2023,ArezouGhorbaniii@gmail.com**/
 @AndroidEntryPoint
 class RecipeFragment : Fragment() {
-    //    Binding
+    //Binding
     private var _binding: FragmentRecipeBinding? = null
     private val binding get() = _binding!!
 
-    //    viewModels
-    private val registerViewModel: RegisterViewModel by viewModels()
-    private val viewModel: RecipeViewModel by viewModels()
-
-    //    adapter
     @Inject
     lateinit var popularAdapter: PopularAdapter
 
     @Inject
     lateinit var recentAdapter: RecentAdapter
 
-    //    others
+    //Other
+    private val viewModel: RecipeViewModel by viewModels()
+    private val registerViewModel: RegisterViewModel by viewModels()
+    private val args: RecipeFragmentArgs by navArgs()
     private var autoScrollIndex = 0
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentRecipeBinding.inflate(layoutInflater)
         return binding.root
-
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-            lifecycleScope.launchWhenStarted {
-            showUserName()
-        }
-//        callData-cash
-        callPopularData()
-        callRecentData()
+        //Show username
+        lifecycleScope.launchWhenCreated { showUsername() }
+        //Call data
+//        callPopularData()
+//        callRecentData()
+        //Load data
         loadPopularData()
         loadRecentData()
     }
-    private suspend fun showUserName() {
-        registerViewModel.readData.collect {
-            var userName = it.userName
-            binding.usernameTxt.text = "Hello, $userName ${getEmojiByUnicode()}"
-        }
-    }
 
-    private fun getEmojiByUnicode(): String {
-        return String(Character.toChars(0x1f44b))
-    }
+    //---Popular---//
+//    private fun callPopularData() {
+//        initPopularRecycler()
+//        viewModel.readPopularFromDb.onceObserve(viewLifecycleOwner) { database ->
+//            if (database.isNotEmpty()) {
+//                database[0].
+//                database[0].response.results?.let { result ->
+//                    setupLoading(false, binding.popularList)
+//                    fillPopularAdapter(result.toMutableList())
+//                }
+//            } else {
+//                viewModel.callPopularApi(viewModel.popularQueries())
+//            }
+//        }
+//    }
 
     private fun loadPopularData() {
         binding.apply {
-            viewModel.popularliveData.observe(viewLifecycleOwner) { response ->
+            viewModel.popularData.observe(viewLifecycleOwner) { response ->
                 when (response) {
                     is NetworkRequest.Loading -> {
-                        showHideShimmer(true, popularList)
-
+                        setupLoading(true, popularList)
                     }
-
                     is NetworkRequest.Success -> {
-                        showHideShimmer(false, popularList)
-
+                        setupLoading(false, popularList)
                         response.data?.let { data ->
                             if (data.results!!.isNotEmpty()) {
-                                fillAdapterData(data.results.toMutableList())
-
+                                fillPopularAdapter(data.results.toMutableList())
                             }
                         }
                     }
-
                     is NetworkRequest.Error -> {
-                        showHideShimmer(false, popularList)
+                        setupLoading(false, popularList)
                         binding.root.showSnackBar(response.message!!)
                     }
                 }
             }
-
         }
     }
 
-    private fun loadRecentData() {
-        binding.apply {
-            viewModel.recentRecipesLiveData.observe(viewLifecycleOwner) { response ->
-                when (response) {
-                    is NetworkRequest.Loading -> {
-                        showHideShimmer(true, recipesList)
-                    }
-
-                    is NetworkRequest.Success -> {
-                        showHideShimmer(false, recipesList)
-
-                        response.data?.let { data ->
-                            if (data.results!!.isNotEmpty()) {
-                                recentAdapter.setData(data.results)
-                                initRecentRecycler()
-
-                            }
-                        }
-                    }
-
-                    is NetworkRequest.Error -> {
-                        showHideShimmer(false, popularList)
-                        binding.root.showSnackBar(response.message!!)
-                    }
-                }
-            }
-
-        }
-    }
-
-    private fun callRecentData() {
-        initRecentRecycler()
-        viewModel.readPopularFromDb.onceObserve(viewLifecycleOwner) { database ->
-            if (database.isNotEmpty() && database.size > 1) {
-                database[1].responseRecipes.results?.let { result ->
-                    setupLoading(false, binding.recipesList)
-                    recentAdapter.setData(result)
-                }
-            } else viewModel.callRecentApi()
-        }
-    }
-
-    private fun showHideShimmer(isVisible: Boolean, shimmer: ShimmerRecyclerView) {
-        shimmer.apply {
-            if (isVisible) shimmer.showShimmer() else shimmer.hideShimmer()
-        }
+    private fun fillPopularAdapter(result: MutableList<ResponseRecipes.Result>) {
+        popularAdapter.setData(result)
+        autoScrollPopular(result)
     }
 
     private fun initPopularRecycler() {
-//        scroll just one with snapHelper
         val snapHelper = LinearSnapHelper()
-        binding.popularList.setUpRecyclerView(
-            LinearLayoutManager(
-                requireContext(),
-                LinearLayoutManager.HORIZONTAL,
-                false
-            ),
+        binding.popularList.setupRecyclerview(
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false),
             popularAdapter
         )
+        //Snap
         snapHelper.attachToRecyclerView(binding.popularList)
+        //Click
         popularAdapter.setOnItemClickListener {
-//go to detailPagr
+            gotoDetailPage(it)
         }
     }
 
-    private fun initRecentRecycler() {
-
-        binding.recipesList.setUpRecyclerView(
-            LinearLayoutManager(
-                requireContext(),
-                LinearLayoutManager.VERTICAL,
-                false
-            ),
-            recentAdapter
-        )
-//        popularAdapter.setOnItemClickListener {
-//go to detailPage
-    }
-
-    //automatic scroll
     private fun autoScrollPopular(list: List<ResponseRecipes.Result>) {
         lifecycleScope.launchWhenCreated {
             repeat(Constants.REPEAT_TIME) {
@@ -199,25 +140,59 @@ class RecipeFragment : Fragment() {
         }
     }
 
-    //---Popular---//
-    private fun callPopularData() {
-        initPopularRecycler()
-        viewModel.readPopularFromDb.onceObserve(viewLifecycleOwner) { database ->
-            if (database.isNotEmpty()) {
-                database[0].responseRecipes.results?.let { result ->
-                    setupLoading(false, binding.popularList)
-                    fillAdapterData(result.toMutableList())
+//    //---Recent---//
+//    private fun callRecentData() {
+//        initRecentRecycler()
+//        viewModel.readRecentFromDb.onceObserve(viewLifecycleOwner) { database ->
+//            if (database.isNotEmpty() && database.size > 1 && !args.isUpdateData) {
+//                database[1].response.results?.let { result ->
+//                    setupLoading(false, binding.recipesList)
+//                    recentAdapter.setData(result)
+//                }
+//            } else {
+//                viewModel.callRecentApi(viewModel.recentQueries())
+//            }
+//        }
+//    }
+
+    private fun loadRecentData() {
+        binding.apply {
+            viewModel.recentData.observe(viewLifecycleOwner) { response ->
+                when (response) {
+                    is NetworkRequest.Loading -> {
+                        setupLoading(true, recipesList)
+                    }
+                    is NetworkRequest.Success -> {
+                        setupLoading(false, recipesList)
+                        response.data?.let { data ->
+                            if (data.results!!.isNotEmpty()) {
+                                recentAdapter.setData(data.results)
+                            }
+                        }
+                    }
+                    is NetworkRequest.Error -> {
+                        setupLoading(false, recipesList)
+                        binding.root.showSnackBar(response.message!!)
+                    }
                 }
-            } else {
-                viewModel.callPopularApi()
             }
         }
     }
 
-    private fun fillAdapterData(data: MutableList<ResponseRecipes.Result>) {
-        popularAdapter.setData(data)
-        autoScrollPopular(data)
+    private fun initRecentRecycler() {
+        binding.recipesList.setupRecyclerview(
+            LinearLayoutManager(requireContext()),
+            recentAdapter
+        )
+        //Click
+        recentAdapter.setOnItemClickListener {
+            gotoDetailPage(it)
+        }
+    }
 
+    private fun gotoDetailPage(id: Int) {
+        val action = RecipeFragmentDirections.actionToDetail(id)
+        findNavController().navigate(action)
     }
 
     private fun setupLoading(isShownLoading: Boolean, shimmer: ShimmerRecyclerView) {
@@ -225,8 +200,20 @@ class RecipeFragment : Fragment() {
             if (isShownLoading) showShimmer() else hideShimmer()
         }
     }
-    override fun onDestroyView() {
-        super.onDestroyView()
+
+    @SuppressLint("SetTextI18n")
+    suspend fun showUsername() {
+        registerViewModel.readData.collect {
+            binding.usernameTxt.text = "${getString(R.string.hello)}, ${it.userName} ${getEmojiByUnicode()}"
+        }
+    }
+
+    private fun getEmojiByUnicode(): String {
+        return String(Character.toChars(0x1f44b))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         _binding = null
     }
 }

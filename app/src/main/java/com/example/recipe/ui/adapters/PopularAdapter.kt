@@ -1,4 +1,4 @@
-package com.example.recipe.data.ui.adapters
+package com.example.recipe.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,6 +11,7 @@ import com.example.recipe.databinding.ItemPopularBinding
 import com.example.recipe.models.recipes.ResponseRecipes.Result
 import com.example.recipe.utils.Constants
 import javax.inject.Inject
+/**Created by Arezou-Ghorbani on 5,October,2023,Arezoughorbaniii@gmail.com**/
 
 class PopularAdapter @Inject constructor() : RecyclerView.Adapter<PopularAdapter.ViewHolder>() {
     private lateinit var binding: ItemPopularBinding

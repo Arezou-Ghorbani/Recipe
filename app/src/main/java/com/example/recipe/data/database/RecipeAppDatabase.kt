@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
+import com.example.recipe.data.entity.RecipeEntity
 
 /**Created by Arezou-Ghorbani on 20,September,2023,ArezouGhorbaniii@gmail.com**/
 @Database(entities = [RecipeEntity::class], version = 1, exportSchema = false)

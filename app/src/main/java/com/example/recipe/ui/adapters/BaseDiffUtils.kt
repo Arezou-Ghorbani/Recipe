@@ -2,6 +2,7 @@ package com.example.recipe.ui.adapters
 
 import androidx.recyclerview.widget.DiffUtil
 
+/**Created by Arezou-Ghorbani on 12,October,2023,Arezoughorbaniii@gmail.com**/
 class BaseDiffUtils<T>(private val oldItems: List<T>, private val newItems: List<T>) :
     DiffUtil.Callback() {
     override fun getOldListSize(): Int {
