@@ -1,60 +1,208 @@
 package com.example.recipe.ui.lucky
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
+import coil.request.CachePolicy
 import com.example.recipe.R
+import com.example.recipe.databinding.FragmentLuckyBinding
+import com.example.recipe.models.detail.ResponseDetail
+import com.example.recipe.models.lucky.ResponseLucky
+import com.example.recipe.ui.adapters.InstructionsAdapter
+import com.example.recipe.ui.adapters.StepsAdapter
+import com.example.recipe.ui.detail.DetailFragmentDirections
+import com.example.recipe.utils.Constants
+import com.example.recipe.utils.NetworkChecker
+import com.example.recipe.utils.NetworkRequest
+import com.example.recipe.utils.minToHour
+import com.example.recipe.utils.setDynamicallyColor
+import com.example.recipe.utils.setupRecyclerview
+import com.example.recipe.utils.showSnackBar
+import com.example.recipe.utils.visibilityType
+import com.example.recipe.viewmodel.LuckyViewModel
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipDrawable
+import com.google.android.material.chip.ChipGroup
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [LuckyFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+/**Created by Arezou-Ghorbani on 23,September,2023,ArezouGhorbaniii@gmail.com**/
+
+@AndroidEntryPoint
 class LuckyFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    //Binding
+    private var _binding: FragmentLuckyBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    @Inject
+    lateinit var instructionsAdapter: InstructionsAdapter
+
+    @Inject
+    lateinit var stepsAdapter: StepsAdapter
+
+    @Inject
+    lateinit var networkChecker: NetworkChecker
+
+    //Other
+    private val viewModel: LuckyViewModel by viewModels()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentLuckyBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //Check Internet
+        lifecycleScope.launchWhenStarted {
+            networkChecker.checkNetworkAvailability().collect { state ->
+                initInternetLayout(state)
+                if (state)
+                    viewModel.callLuckyApi(viewModel.luckyQueries())
+            }
+        }
+        //Load data
+        loadDetailDataFromApi()
+    }
+
+    private fun loadDetailDataFromApi() {
+        binding.apply {
+            viewModel.luckyData.observe(viewLifecycleOwner) { response ->
+                when (response) {
+                    is NetworkRequest.Loading -> {
+                        loading.visibilityType(true, contentLay)
+                    }
+                    is NetworkRequest.Success -> {
+                        loading.visibilityType(false, contentLay)
+                        response.data?.let { data ->
+                            initViewsWithData(data.recipes!![0])
+                        }
+                    }
+                    is NetworkRequest.Error -> {
+                        loading.visibilityType(false, contentLay)
+                        binding.root.showSnackBar(response.message!!)
+                    }
+                }
+            }
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_lucky, container, false)
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LuckyFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LuckyFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    @SuppressLint("SetTextI18n")
+    private fun initViewsWithData(data: ResponseLucky.Recipe) {
+        binding.apply {
+            //Image
+            val imageSplit = data.image!!.split("-")
+            val imageSize = imageSplit[1].replace(Constants.OLD_IMAGE_SIZE, Constants.NEW_IMAGE_SIZE)
+            coverImg.load("${imageSplit[0]}-$imageSize") {
+                crossfade(true)
+                crossfade(800)
+                memoryCachePolicy(CachePolicy.ENABLED)
+                error(R.drawable.ic_placeholder)
+            }
+            //Source
+            data.sourceUrl?.let { source ->
+                sourceImg.isVisible = true
+                sourceImg.setOnClickListener {
+                    val direction = DetailFragmentDirections.actionToWebView(source)
+                    findNavController().navigate(direction)
                 }
             }
+            //Text
+            timeTxt.text = data.readyInMinutes!!.minToHour()
+            nameTxt.text = data.title
+            //Desc
+            val summary = HtmlCompat.fromHtml(data.summary!!, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            descTxt.text = summary
+            //Toggle
+            if (data.cheap!!) cheapTxt.setDynamicallyColor(R.color.caribbean_green)
+            if (data.veryPopular!!) popularTxt.setDynamicallyColor(R.color.tart_orange)
+            if (data.vegan!!) veganTxt.setDynamicallyColor(R.color.caribbean_green)
+            if (data.dairyFree!!) dairyTxt.setDynamicallyColor(R.color.caribbean_green)
+            //Like
+            likeTxt.text = data.aggregateLikes.toString()
+            //price
+            priceTxt.text = "${data.pricePerServing} $"
+            //Healthy
+            healthyTxt.text = data.healthScore.toString()
+            when (data.healthScore) {
+                in 90..100 -> healthyTxt.setDynamicallyColor(R.color.caribbean_green)
+                in 60..89 -> healthyTxt.setDynamicallyColor(R.color.chineseYellow)
+                in 0..59 -> healthyTxt.setDynamicallyColor(R.color.tart_orange)
+            }
+            //Instructions
+            instructionsCount.text = "${data.extendedIngredients!!.size} ${getString(R.string.items)}"
+            val instructions = HtmlCompat.fromHtml(data.instructions!!, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            instructionsDesc.text = instructions
+            initInstructionsList(data.extendedIngredients.toMutableList())
+            //Steps
+            initStepsList(data.analyzedInstructions!![0].steps!!.toMutableList())
+            stepsShowMore.setOnClickListener {
+                val direction = DetailFragmentDirections.actionDetailToSteps(data.analyzedInstructions[0])
+                findNavController().navigate(direction)
+            }
+            //Diets
+            setupChip(data.diets!!.toMutableList(), dietsChipGroup)
+        }
+    }
+
+    private fun initInstructionsList(list: MutableList<ResponseDetail.ExtendedIngredient>) {
+        if (list.isNotEmpty()) {
+            instructionsAdapter.setData(list)
+            binding.instructionsList.setupRecyclerview(
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false),
+                instructionsAdapter
+            )
+        }
+    }
+
+    private fun initStepsList(list: MutableList<ResponseDetail.AnalyzedInstruction.Step>) {
+        if (list.isNotEmpty()) {
+            Constants.STEPS_COUNT = if (list.size < 3) {
+                list.size
+            } else {
+                3
+            }
+            stepsAdapter.setData(list)
+            binding.apply {
+                stepsList.setupRecyclerview(LinearLayoutManager(requireContext()), stepsAdapter)
+                //Show more
+                if (list.size > 3) {
+                    stepsShowMore.isVisible = true
+                }
+            }
+        }
+    }
+
+    private fun setupChip(list: MutableList<String>, view: ChipGroup) {
+        list.forEach {
+            val chip = Chip(requireContext())
+            val drawable = ChipDrawable.createFromAttributes(requireContext(), null, 0, R.style.DietsChip)
+            chip.setChipDrawable(drawable)
+            chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.darkGray))
+            chip.text = it
+            view.addView(chip)
+        }
+    }
+
+    private fun initInternetLayout(isConnected: Boolean) {
+        binding.internetLay.isVisible = isConnected.not()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }
