@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_main"
     app:startDestination="@id/splashFragment">
+
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.example.recipe.ui.splash.SplashFragment"
-        android:label="SplashFragment"
+        android:label="fragment_splash"
         tools:layout="@layout/fragment_splash" />
+
     <action
         android:id="@+id/actionToRegister"
         app:destination="@id/registerFragment"
@@ -21,6 +23,7 @@
         android:name="com.example.recipe.ui.register.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" />
+
     <action
         android:id="@+id/actionToRecipe"
         app:destination="@id/recipeFragment"
@@ -28,34 +31,37 @@
         app:exitAnim="@anim/nav_default_exit_anim"
         app:popEnterAnim="@anim/nav_default_pop_enter_anim"
         app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
     <fragment
         android:id="@+id/recipeFragment"
         android:name="com.example.recipe.ui.recipe.RecipeFragment"
-        android:label="RecipeFragment"
+        android:label="fragment_recipe"
         tools:layout="@layout/fragment_recipe">
-    <argument
-        android:name="isUpdateData"
-        android:defaultValue="false"
-        app:argType="boolean" />
-</fragment>
+
+        <argument
+            android:name="isUpdateData"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </fragment>
 
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.recipe.ui.search.SearchFragment"
-        android:label="RecipeFragment"
+        android:label="fragment_recipe"
         tools:layout="@layout/fragment_search" />
 
     <fragment
         android:id="@+id/luckyFragment"
         android:name="com.example.recipe.ui.lucky.LuckyFragment"
-        android:label="RecipeFragment"
+        android:label="fragment_recipe"
         tools:layout="@layout/fragment_lucky" />
 
     <fragment
         android:id="@+id/favoriteFragment"
         android:name="com.example.recipe.ui.favorite.FavoriteFragment"
-        android:label="RecipeFragment"
+        android:label="fragment_recipe"
         tools:layout="@layout/fragment_favorite" />
+
     <action
         android:id="@+id/actionToMenu"
         app:destination="@id/menuFragment" />
@@ -71,6 +77,7 @@
             app:popUpTo="@id/recipeFragment"
             app:popUpToInclusive="true" />
     </dialog>
+
     <action
         android:id="@+id/actionToDetail"
         app:destination="@id/detailFragment"
@@ -89,13 +96,7 @@
             app:argType="integer" />
 
     </fragment>
-    <action
-        android:id="@+id/actionToWebView"
-        app:destination="@id/webViewFragment"
-        app:enterAnim="@anim/nav_default_enter_anim"
-        app:exitAnim="@anim/nav_default_exit_anim"
-        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
     <action
         android:id="@+id/actionDetailToSteps"
         app:destination="@id/stepsFragment" />
@@ -107,8 +108,16 @@
         tools:layout="@layout/fragment_steps" >
         <argument
             android:name="data"
-            app:argType="com.example.recipe.models.detail.ResponseDetail.AnalyzedInstruction" />
-    </dialog>
+            app:argType="com.example.recipe.models.detail.ResponseDetail$AnalyzedInstruction" />    </dialog>
+
+    <action
+        android:id="@+id/actionToWebView"
+        app:destination="@id/webViewFragment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
     <fragment
         android:id="@+id/webViewFragment"
         android:name="com.example.recipe.ui.webView.WebViewFragment"

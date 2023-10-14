@@ -18,8 +18,8 @@ import com.example.recipe.utils.NetworkChecker
 import com.example.recipe.utils.NetworkRequest
 import com.example.recipe.viewmodel.RegisterViewModel
 import androidx.fragment.app.viewModels
+import com.example.recipe.utils.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
-import showSnackBar
 import javax.inject.Inject
 
 @AndroidEntryPoint
