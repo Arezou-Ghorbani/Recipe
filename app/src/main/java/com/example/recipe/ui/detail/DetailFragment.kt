@@ -41,6 +41,7 @@ import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import javax.inject.Inject
+/**Created by Arezou-Ghorbani on 23,September,2023,ArezouGhorbaniii@gmail.com**/
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {

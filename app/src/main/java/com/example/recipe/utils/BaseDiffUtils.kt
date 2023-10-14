@@ -1,4 +1,4 @@
-package com.example.recipe.ui.adapters
+package com.example.recipe.utils
 
 import androidx.recyclerview.widget.DiffUtil
 

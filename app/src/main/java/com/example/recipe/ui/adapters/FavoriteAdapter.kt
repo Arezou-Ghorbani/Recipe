@@ -12,19 +12,18 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.request.CachePolicy
 import com.example.recipe.R
+import com.example.recipe.data.entity.FavoriteEntity
 import com.example.recipe.databinding.ItemRecipesBinding
-import com.example.recipe.models.recipes.ResponseRecipes
 import com.example.recipe.utils.BaseDiffUtils
 import com.example.recipe.utils.Constants
 import com.example.recipe.utils.minToHour
 import com.example.recipe.utils.setDynamicallyColor
 import javax.inject.Inject
-/**Created by Arezou-Ghorbani on 1,October,2023,Arezoughorbaniii@gmail.com**/
 
-class RecentAdapter @Inject constructor() : RecyclerView.Adapter<RecentAdapter.ViewHolder>() {
+class FavoriteAdapter @Inject constructor() : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
 
     private lateinit var binding: ItemRecipesBinding
-    private var items = emptyList<ResponseRecipes.Result>()
+    private var items = emptyList<FavoriteEntity>()
     private lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -53,39 +52,41 @@ class RecentAdapter @Inject constructor() : RecyclerView.Adapter<RecentAdapter.V
 
     inner class ViewHolder : RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
-        fun bind(item: ResponseRecipes.Result) {
+        fun bind(item: FavoriteEntity) {
             binding.apply {
-                //Text
-                recipeNameTxt.text = item.title
-                val htmlFormatter = HtmlCompat.fromHtml(item.summary!!, HtmlCompat.FROM_HTML_MODE_COMPACT)
-                recipeDescTxt.text = htmlFormatter
-                recipeLikeTxt.text = item.aggregateLikes.toString()
-                recipeTimeTxt.text = item.readyInMinutes!!.minToHour()
-                recipeHealthTxt.text = item.healthScore.toString()
-                //Image
-                val imageSplit = item.image!!.split("-")
-                val imageSize = imageSplit[1].replace(Constants.OLD_IMAGE_SIZE, Constants.NEW_IMAGE_SIZE)
-                recipeImg.load("${imageSplit[0]}-$imageSize") {
-                    crossfade(true)
-                    crossfade(800)
-                    memoryCachePolicy(CachePolicy.ENABLED)
-                    error(R.drawable.ic_placeholder)
-                }
-                //Vegan
-                if (item.vegan!!) {
-                    recipeVeganTxt.setDynamicallyColor(R.color.caribbean_green)
-                } else {
-                    recipeVeganTxt.setDynamicallyColor(R.color.gray)
-                }
-                //Healthy
-                when (item.healthScore) {
-                    in 90..100 -> recipeHealthTxt.setDynamicallyColor(R.color.caribbean_green)
-                    in 60..89 -> recipeHealthTxt.setDynamicallyColor(R.color.chineseYellow)
-                    in 0..59 -> recipeHealthTxt.setDynamicallyColor(R.color.tart_orange)
-                }
-                //Click
-                root.setOnClickListener {
-                    onItemClickListener?.let { it(item.id!!) }
+                item.result.let { result ->
+                    //Text
+                    recipeNameTxt.text = result.title
+                    val htmlFormatter = HtmlCompat.fromHtml(result.summary!!, HtmlCompat.FROM_HTML_MODE_COMPACT)
+                    recipeDescTxt.text = htmlFormatter
+                    recipeLikeTxt.text = result.aggregateLikes.toString()
+                    recipeTimeTxt.text = result.readyInMinutes!!.minToHour()
+                    recipeHealthTxt.text = result.healthScore.toString()
+                    //Image
+                    val imageSplit = result.image!!.split("-")
+                    val imageSize = imageSplit[1].replace(Constants.OLD_IMAGE_SIZE, Constants.NEW_IMAGE_SIZE)
+                    recipeImg.load("${imageSplit[0]}-$imageSize") {
+                        crossfade(true)
+                        crossfade(800)
+                        memoryCachePolicy(CachePolicy.ENABLED)
+                        error(R.drawable.ic_placeholder)
+                    }
+                    //Vegan
+                    if (result.vegan!!) {
+                        recipeVeganTxt.setDynamicallyColor(R.color.caribbean_green)
+                    } else {
+                        recipeVeganTxt.setDynamicallyColor(R.color.gray)
+                    }
+                    //Healthy
+                    when (result.healthScore) {
+                        in 90..100 -> recipeHealthTxt.setDynamicallyColor(R.color.caribbean_green)
+                        in 60..89 -> recipeHealthTxt.setDynamicallyColor(R.color.chineseYellow)
+                        in 0..59 -> recipeHealthTxt.setDynamicallyColor(R.color.tart_orange)
+                    }
+                    //Click
+                    root.setOnClickListener {
+                        onItemClickListener?.let { it(result.id!!) }
+                    }
                 }
             }
         }
@@ -105,7 +106,7 @@ class RecentAdapter @Inject constructor() : RecyclerView.Adapter<RecentAdapter.V
         onItemClickListener = listener
     }
 
-    fun setData(data: List<ResponseRecipes.Result>) {
+    fun setData(data: List<FavoriteEntity>) {
         val adapterDiffUtils = BaseDiffUtils(items, data)
         val diffUtils = DiffUtil.calculateDiff(adapterDiffUtils)
         items = data

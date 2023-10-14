@@ -5,56 +5,65 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recipe.R
+import com.example.recipe.databinding.FragmentFavoriteBinding
+import com.example.recipe.ui.adapters.FavoriteAdapter
+import com.example.recipe.ui.recipe.RecipeFragmentDirections
+import com.example.recipe.utils.setupRecyclerview
+import com.example.recipe.utils.visibilityType
+import com.example.recipe.viewmodel.FavoriteViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+/**Created by Arezou-Ghorbani on 23,September,2023,ArezouGhorbaniii@gmail.com**/
 
-/**
- * A simple [Fragment] subclass.
- * Use the [FavoriteFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+@AndroidEntryPoint
 class FavoriteFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    //Binding
+    private var _binding: FragmentFavoriteBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    @Inject
+    lateinit var favoriteAdapter: FavoriteAdapter
+
+    //Other
+    private val viewModel: FavoriteViewModel by viewModels()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentFavoriteBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //InitViews
+        binding.apply {
+            //Load favorites
+            viewModel.readFavoriteData.observe(viewLifecycleOwner) {
+                if (it.isNotEmpty()) {
+                    emptyTxt.visibilityType(false, favoriteList)
+                    //Data
+                    favoriteAdapter.setData(it)
+                    favoriteList.setupRecyclerview(LinearLayoutManager(requireContext()), favoriteAdapter)
+                    //Click
+                    favoriteAdapter.setOnItemClickListener { id ->
+                        val action = RecipeFragmentDirections.actionToDetail(id)
+                        findNavController().navigate(action)
+                    }
+                } else {
+                    emptyTxt.visibilityType(true, favoriteList)
+                }
+            }
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorite, container, false)
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FavoriteFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FavoriteFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipe.databinding.ItemStepBinding
 import com.example.recipe.models.detail.ResponseDetail
+import com.example.recipe.utils.BaseDiffUtils
 import com.example.recipe.utils.Constants
 import com.example.recipe.utils.minToHour
 import javax.inject.Inject
