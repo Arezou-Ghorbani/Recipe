@@ -12,7 +12,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-/**Created by Arezou-Ghorbani on 29,August,2023,Arezoughorbaniii@gmail.com**/
 @Module
 @InstallIn(SingletonComponent::class)
 object CheckConnection {
@@ -28,13 +27,11 @@ object CheckConnection {
         addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
         addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
         addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-//        Android M
+        //Android M
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             addCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
-//        Android P
+        //Android P
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-            addCapability(NetworkCapabilities.NET_CAPABILITY_FOREGROUND )
-
+            addCapability(NetworkCapabilities.NET_CAPABILITY_FOREGROUND)
     }.build()
-
 }
